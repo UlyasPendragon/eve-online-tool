@@ -1,0 +1,81 @@
+{
+  "name": "eve-nomad-backend",
+  "version": "0.1.0",
+  "description": "EVE Nomad - Mobile Companion App Backend API",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky install",
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "eve-online",
+    "esi",
+    "typescript",
+    "fastify",
+    "api"
+  ],
+  "author": "EVE Online Tool Development Team",
+  "license": "MIT",
+  "packageManager": "pnpm@10.16.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/jwt": "^10.0.0",
+    "@fastify/swagger": "^9.5.2",
+    "@fastify/swagger-ui": "^5.2.3",
+    "@prisma/client": "^6.17.1",
+    "@sentry/node": "^10.20.0",
+    "@sentry/profiling-node": "^10.20.0",
+    "@types/cron": "^2.4.3",
+    "axios": "^1.12.2",
+    "bullmq": "^5.61.0",
+    "cron": "^4.3.3",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.6.1",
+    "firebase-admin": "^13.5.0",
+    "ioredis": "^5.8.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pino": "^10.0.0",
+    "pino-http": "^11.0.0",
+    "stripe": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
+    "pino-pretty": "^13.1.2",
+    "prettier": "^3.6.2",
+    "prisma": "^6.17.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "eve-nomad-esi-poc",
+  "version": "0.1.0",
+  "description": "Proof of concept for EVE Online ESI integration with Node.js + TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test:esi": "tsx src/test-esi.ts"
+  },
+  "keywords": ["eve-online", "esi", "typescript"],
+  "author": "EVE Online Tool Development Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1"
+  }
+}

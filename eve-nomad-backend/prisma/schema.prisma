@@ -1,0 +1,182 @@
+// Prisma Schema for EVE Nomad Backend
+// Database: PostgreSQL 16
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User accounts (tied to EVE characters via SSO)
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Subscription info
+  subscriptionTier    String   @default("free") // "free", "premium"
+  subscriptionStatus  String   @default("active") // "active", "canceled", "expired"
+  subscriptionEndsAt  DateTime?
+  stripeCustomerId    String?  @unique
+  stripeSubscriptionId String? @unique
+
+  // Relations
+  characters     Character[]
+  sessions       Session[]
+  settings       UserSettings?
+  notifications  NotificationLog[]
+
+  @@index([email])
+  @@index([stripeCustomerId])
+}
+
+// EVE Online Characters (linked via EVE SSO)
+model Character {
+  id            String   @id @default(cuid())
+  characterId   Int      @unique // EVE character ID from ESI
+  characterName String
+  corporationId Int
+  allianceId    Int?
+  userId        String
+
+  // ESI Token Management
+  accessToken       String   @db.Text
+  refreshToken      String   @db.Text
+  tokenExpiresAt    DateTime
+  scopes            String[] // ESI scopes granted
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastSyncAt DateTime?
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([characterId])
+  @@index([tokenExpiresAt]) // For token refresh queries
+  @@index([userId, characterId]) // Composite index for user's characters
+}
+
+// User sessions (JWT-based)
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique @db.Text
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Device info (for push notifications)
+  deviceType  String? // "ios", "android"
+  deviceToken String? // Firebase Cloud Messaging token
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt]) // For cleanup queries
+  @@index([userId, expiresAt]) // Composite for user session cleanup
+}
+
+// Background job tracking (BullMQ integration)
+model Job {
+  id          String   @id @default(cuid())
+  jobType     String   // "sync_skills", "sync_mail", "sync_market_orders", etc.
+  characterId String?
+  status      String   @default("pending") // "pending", "processing", "completed", "failed"
+  priority    Int      @default(0)
+
+  // Job data
+  payload     Json?
+  result      Json?
+  error       String?  @db.Text
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  @@index([jobType])
+  @@index([status])
+  @@index([characterId])
+  @@index([createdAt]) // For job history queries
+  @@index([status, createdAt]) // Composite for job queue processing
+}
+
+// Cache for ESI data (supplement to Redis)
+model CachedData {
+  id         String   @id @default(cuid())
+  cacheKey   String   @unique
+  data       Json
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([cacheKey])
+  @@index([expiresAt])
+}
+
+// User preferences and app settings
+model UserSettings {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // App preferences
+  theme              String  @default("dark") // "light", "dark", "auto"
+  defaultCharacterId Int?
+  language           String  @default("en")
+
+  // Notification preferences
+  notifySkillComplete Boolean @default(true)
+  notifyMarketOrders  Boolean @default(true)
+  notifyIndustryJobs  Boolean @default(true)
+  notifyPIExtractors  Boolean @default(false)
+  notifyEveMail       Boolean @default(true)
+
+  // Privacy settings
+  shareActivityStats Boolean @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// Push notification tracking and history
+model NotificationLog {
+  id          String @id @default(cuid())
+  userId      String
+  characterId Int?
+
+  // Notification details
+  type  String // "skill_complete", "market_order_filled", "industry_job_complete", "pi_extractor_expired", "eve_mail_received"
+  title String
+  body  String @db.Text
+  data  Json? // Additional structured data
+
+  // Delivery tracking
+  status String    @default("pending") // "pending", "sent", "failed", "read"
+  sentAt DateTime?
+  readAt DateTime?
+  error  String?   @db.Text
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([characterId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@index([userId, status]) // Composite for user's unread notifications
+}
