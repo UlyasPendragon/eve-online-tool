@@ -129,10 +129,7 @@ function getErrorMessage(error: FastifyError, statusCode: number): string {
 /**
  * Not Found Handler
  */
-export async function notFoundHandler(
-  request: FastifyRequest,
-  reply: FastifyReply,
-): Promise<void> {
+export async function notFoundHandler(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   const correlationId = request.correlationId || 'unknown';
 
   logger.warn(`Route not found: ${request.method} ${request.url}`, {

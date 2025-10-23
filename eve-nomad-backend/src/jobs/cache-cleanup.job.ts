@@ -4,12 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { createLogger } from '../services/logger.service';
 import { captureException } from '../config/sentry.config';
 import { addJob, createWorker } from '../services/queue.service';
-import {
-  JobType,
-  JobPriority,
-  CacheCleanupJobData,
-  CacheCleanupJobResult,
-} from '../types/jobs';
+import { JobType, JobPriority, CacheCleanupJobData, CacheCleanupJobResult } from '../types/jobs';
 import * as redis from '../services/redis.service';
 
 const prisma = new PrismaClient();

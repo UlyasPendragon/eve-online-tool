@@ -5,12 +5,7 @@ import * as tokenService from '../services/token.service';
 import { createLogger } from '../services/logger.service';
 import { captureException } from '../config/sentry.config';
 import { addJob, createWorker, getQueue } from '../services/queue.service';
-import {
-  JobType,
-  JobPriority,
-  TokenRefreshJobData,
-  TokenRefreshJobResult,
-} from '../types/jobs';
+import { JobType, JobPriority, TokenRefreshJobData, TokenRefreshJobResult } from '../types/jobs';
 
 const prisma = new PrismaClient();
 const logger = createLogger({ module: 'token-refresh-job' });
@@ -248,13 +243,12 @@ export async function scheduleTokenRefresh() {
     }
 
     const duration = // timer.end({ queued, failed, total: expiringCharacters.length });
-
-    logger.info('Token refresh scheduling completed', {
-      total: expiringCharacters.length,
-      queued,
-      failed,
-      duration,
-    });
+      logger.info('Token refresh scheduling completed', {
+        total: expiringCharacters.length,
+        queued,
+        failed,
+        duration,
+      });
 
     return { total: expiringCharacters.length, queued, failed };
   } catch (error) {
@@ -279,11 +273,14 @@ export function startTokenRefreshScheduler() {
   });
 
   // Then run every 2 minutes
-  const intervalId = setInterval(() => {
-    scheduleTokenRefresh().catch((err) => {
-      logger.error('Token refresh schedule failed', err);
-    });
-  }, 2 * 60 * 1000); // 2 minutes
+  const intervalId = setInterval(
+    () => {
+      scheduleTokenRefresh().catch((err) => {
+        logger.error('Token refresh schedule failed', err);
+      });
+    },
+    2 * 60 * 1000,
+  ); // 2 minutes
 
   logger.info('Token refresh scheduler started');
 
@@ -341,12 +338,11 @@ export async function cleanupFailedJobs() {
     }
 
     const duration = // timer.end({ removed, total: failed.length });
-
-    logger.info('Failed jobs cleanup completed', {
-      total: failed.length,
-      removed,
-      duration,
-    });
+      logger.info('Failed jobs cleanup completed', {
+        total: failed.length,
+        removed,
+        duration,
+      });
 
     return removed;
   } catch (error) {

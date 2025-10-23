@@ -18,10 +18,7 @@ interface CacheEntry {
 /**
  * Generate cache key from ESI endpoint and parameters
  */
-export function generateCacheKey(
-  endpoint: string,
-  params?: Record<string, unknown>,
-): string {
+export function generateCacheKey(endpoint: string, params?: Record<string, unknown>): string {
   const baseKey = endpoint.replace(/^\/+|\/+$/g, '').replace(/\//g, ':');
 
   if (!params || Object.keys(params).length === 0) {
@@ -91,9 +88,7 @@ export async function get(cacheKey: string): Promise<CacheEntry | null> {
 
         // Warm Redis cache
         if (redis.isConnected()) {
-          const ttl = Math.floor(
-            (cached.expiresAt.getTime() - Date.now()) / 1000,
-          );
+          const ttl = Math.floor((cached.expiresAt.getTime() - Date.now()) / 1000);
           await redis
             .set(
               cacheKey,
@@ -228,9 +223,7 @@ export async function deletePattern(pattern: string): Promise<void> {
         },
       },
     });
-    console.info(
-      `[Cache] Database DELETE PATTERN: ${pattern} (${deleted.count} entries)`,
-    );
+    console.info(`[Cache] Database DELETE PATTERN: ${pattern} (${deleted.count} entries)`);
   } catch (error) {
     console.error(`[Cache] Database delete pattern error for ${pattern}:`, error);
   }

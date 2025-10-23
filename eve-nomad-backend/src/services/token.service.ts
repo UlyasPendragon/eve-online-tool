@@ -35,9 +35,7 @@ interface VerifyResponse {
 /**
  * Exchange authorization code for access and refresh tokens
  */
-export async function exchangeAuthorizationCode(
-  authorizationCode: string,
-): Promise<TokenResponse> {
+export async function exchangeAuthorizationCode(authorizationCode: string): Promise<TokenResponse> {
   const clientId = process.env['EVE_SSO_CLIENT_ID'];
   const clientSecret = process.env['EVE_SSO_CLIENT_SECRET'];
 
@@ -98,9 +96,7 @@ export async function verifyAccessToken(accessToken: string): Promise<VerifyResp
         status: error.response?.status,
         data: error.response?.data,
       });
-      throw new Error(
-        `Token verification failed: ${error.response?.data?.error || error.message}`,
-      );
+      throw new Error(`Token verification failed: ${error.response?.data?.error || error.message}`);
     }
     throw error;
   }

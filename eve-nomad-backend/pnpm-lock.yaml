@@ -78,6 +78,9 @@ importers:
         specifier: ^19.1.0
         version: 19.1.0(@types/node@24.8.1)
     devDependencies:
+      '@eslint/js':
+        specifier: ^9.38.0
+        version: 9.38.0
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10

@@ -10,14 +10,17 @@ import crypto from 'crypto';
 const stateStore = new Map<string, { timestamp: number; mobile?: boolean }>();
 
 // Clean up old state tokens every 10 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [state, data] of stateStore.entries()) {
-    if (now - data.timestamp > 10 * 60 * 1000) {
-      stateStore.delete(state);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [state, data] of stateStore.entries()) {
+      if (now - data.timestamp > 10 * 60 * 1000) {
+        stateStore.delete(state);
+      }
     }
-  }
-}, 10 * 60 * 1000);
+  },
+  10 * 60 * 1000,
+);
 
 /**
  * GET /auth/login

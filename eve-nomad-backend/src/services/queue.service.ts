@@ -344,7 +344,10 @@ export async function getJobs(
 /**
  * Get a specific job by ID
  */
-export async function getJob<T = any>(queueName: string, jobId: string): Promise<Job<T> | undefined> {
+export async function getJob<T = any>(
+  queueName: string,
+  jobId: string,
+): Promise<Job<T> | undefined> {
   const queue = getQueue<T>(queueName);
 
   try {

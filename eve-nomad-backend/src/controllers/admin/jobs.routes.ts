@@ -205,10 +205,7 @@ export async function adminJobRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    async (
-      request: FastifyRequest<{ Querystring: { limit?: number } }>,
-      reply: FastifyReply,
-    ) => {
+    async (request: FastifyRequest<{ Querystring: { limit?: number } }>, reply: FastifyReply) => {
       try {
         const { limit = 50 } = request.query;
         const failedJobs = await metricsService.getFailedJobs(limit);
@@ -238,10 +235,7 @@ export async function adminJobRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    async (
-      request: FastifyRequest<{ Querystring: { limit?: number } }>,
-      reply: FastifyReply,
-    ) => {
+    async (request: FastifyRequest<{ Querystring: { limit?: number } }>, reply: FastifyReply) => {
       try {
         const { limit = 50 } = request.query;
         const activeJobs = await metricsService.getActiveJobs(limit);

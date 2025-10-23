@@ -294,7 +294,10 @@ export const ENDPOINT_GROUPS = {
     '/latest/characters/{character_id}/orders/',
     '/latest/characters/{character_id}/orders/history/',
   ],
-  CHARACTER_MAIL: ['/latest/characters/{character_id}/mail/', '/latest/characters/{character_id}/mail/labels/'],
+  CHARACTER_MAIL: [
+    '/latest/characters/{character_id}/mail/',
+    '/latest/characters/{character_id}/mail/labels/',
+  ],
   CHARACTER_NOTIFICATIONS: ['/latest/characters/{character_id}/notifications/'],
 };
 

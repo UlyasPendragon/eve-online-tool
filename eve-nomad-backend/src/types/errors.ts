@@ -128,7 +128,9 @@ export class ReauthRequiredError extends ApplicationError {
   public readonly characterId: number;
 
   constructor(characterId: number) {
-    super(`Re-authentication required for character ${characterId}`, 401, 'REAUTH_REQUIRED', { characterId });
+    super(`Re-authentication required for character ${characterId}`, 401, 'REAUTH_REQUIRED', {
+      characterId,
+    });
     this.characterId = characterId;
   }
 }
@@ -146,7 +148,9 @@ export class InsufficientPermissionsError extends ApplicationError {
   public readonly requiredScope: string;
 
   constructor(requiredScope: string) {
-    super(`Missing required scope: ${requiredScope}`, 403, 'INSUFFICIENT_PERMISSIONS', { requiredScope });
+    super(`Missing required scope: ${requiredScope}`, 403, 'INSUFFICIENT_PERMISSIONS', {
+      requiredScope,
+    });
     this.requiredScope = requiredScope;
   }
 }
@@ -175,7 +179,10 @@ export class RecordNotFoundError extends ApplicationError {
   public readonly recordId: string | number;
 
   constructor(table: string, recordId: string | number) {
-    super(`Record not found in ${table}: ${recordId}`, 404, 'RECORD_NOT_FOUND', { table, recordId });
+    super(`Record not found in ${table}: ${recordId}`, 404, 'RECORD_NOT_FOUND', {
+      table,
+      recordId,
+    });
     this.table = table;
     this.recordId = recordId;
   }
@@ -187,7 +194,11 @@ export class DuplicateRecordError extends ApplicationError {
   public readonly value: unknown;
 
   constructor(table: string, field: string, value: unknown) {
-    super(`Duplicate ${field} in ${table}: ${value}`, 409, 'DUPLICATE_RECORD', { table, field, value });
+    super(`Duplicate ${field} in ${table}: ${value}`, 409, 'DUPLICATE_RECORD', {
+      table,
+      field,
+      value,
+    });
     this.table = table;
     this.field = field;
     this.value = value;
@@ -307,12 +318,9 @@ export class ConfigurationError extends ApplicationError {
   public readonly configKey: string;
 
   constructor(configKey: string, message?: string) {
-    super(
-      message || `Missing or invalid configuration: ${configKey}`,
-      500,
-      'CONFIGURATION_ERROR',
-      { configKey },
-    );
+    super(message || `Missing or invalid configuration: ${configKey}`, 500, 'CONFIGURATION_ERROR', {
+      configKey,
+    });
     this.configKey = configKey;
   }
 }

@@ -1,10 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import {
-  loginHandler,
-  callbackHandler,
-  logoutHandler,
-  verifyHandler,
-} from './auth.controller';
+import { loginHandler, callbackHandler, logoutHandler, verifyHandler } from './auth.controller';
 
 /**
  * Authentication routes
