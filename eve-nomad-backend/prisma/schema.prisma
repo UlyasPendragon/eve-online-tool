@@ -17,6 +17,17 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Password authentication (optional - users can auth via EVE SSO or email/password)
+  passwordHash           String?   @db.Text
+  emailVerified          Boolean   @default(false)
+  emailVerificationToken String?   @unique
+  passwordResetToken     String?   @unique
+  passwordResetExpiresAt DateTime?
+
+  // Two-Factor Authentication (2FA)
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
+
   // Subscription info
   subscriptionTier    String   @default("free") // "free", "premium"
   subscriptionStatus  String   @default("active") // "active", "canceled", "expired"
@@ -32,6 +43,8 @@ model User {
 
   @@index([email])
   @@index([stripeCustomerId])
+  @@index([emailVerificationToken])
+  @@index([passwordResetToken])
 }
 
 // EVE Online Characters (linked via EVE SSO)
