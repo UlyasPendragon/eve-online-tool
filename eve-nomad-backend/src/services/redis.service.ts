@@ -17,10 +17,10 @@ export function getRedisClient(): Redis {
     return redisClient;
   }
 
-  const host = process.env.REDIS_HOST || 'localhost';
-  const port = parseInt(process.env.REDIS_PORT || '6379', 10);
-  const password = process.env.REDIS_PASSWORD;
-  const db = parseInt(process.env.REDIS_DB || '0', 10);
+  const host = process.env['REDIS_HOST'] || 'localhost';
+  const port = parseInt(process.env['REDIS_PORT'] || '6379', 10);
+  const password = process.env['REDIS_PASSWORD'];
+  const db = parseInt(process.env['REDIS_DB'] || '0', 10);
 
   redisClient = new Redis({
     host,

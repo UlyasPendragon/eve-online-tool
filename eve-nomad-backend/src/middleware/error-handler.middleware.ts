@@ -111,7 +111,7 @@ function getErrorName(statusCode: number): string {
  */
 function getErrorMessage(error: FastifyError, statusCode: number): string {
   // Don't expose internal error details in production
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = process.env['NODE_ENV'] === 'production';
 
   // Client errors: return original message
   if (statusCode >= 400 && statusCode < 500) {

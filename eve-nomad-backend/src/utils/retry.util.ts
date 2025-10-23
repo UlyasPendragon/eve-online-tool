@@ -13,8 +13,8 @@ export interface RetryOptions {
 }
 
 const DEFAULT_OPTIONS: Required<RetryOptions> = {
-  maxRetries: parseInt(process.env.ESI_MAX_RETRIES || '3', 10),
-  initialDelayMs: parseInt(process.env.ESI_RETRY_DELAY_MS || '1000', 10),
+  maxRetries: parseInt(process.env['ESI_MAX_RETRIES'] || '3', 10),
+  initialDelayMs: parseInt(process.env['ESI_RETRY_DELAY_MS'] || '1000', 10),
   maxDelayMs: 30000, // 30 seconds max
   backoffMultiplier: 2,
   retryableStatusCodes: [500, 502, 503, 504], // Server errors

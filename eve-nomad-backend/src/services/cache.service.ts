@@ -241,17 +241,17 @@ export async function deletePattern(pattern: string): Promise<void> {
  */
 export function parseCacheControl(cacheControl: string | undefined): number {
   if (!cacheControl) {
-    return parseInt(process.env.REDIS_CACHE_TTL_DEFAULT || '300', 10);
+    return parseInt(process.env['REDIS_CACHE_TTL_DEFAULT'] || '300', 10);
   }
 
   // Look for max-age directive
   const maxAgeMatch = cacheControl.match(/max-age=(\d+)/);
-  if (maxAgeMatch) {
+  if (maxAgeMatch && maxAgeMatch[1]) {
     return parseInt(maxAgeMatch[1], 10);
   }
 
   // Default TTL
-  return parseInt(process.env.REDIS_CACHE_TTL_DEFAULT || '300', 10);
+  return parseInt(process.env['REDIS_CACHE_TTL_DEFAULT'] || '300', 10);
 }
 
 /**
@@ -276,7 +276,7 @@ export function calculateExpiration(
   }
 
   // Default expiration (5 minutes)
-  const defaultTtl = parseInt(process.env.REDIS_CACHE_TTL_DEFAULT || '300', 10);
+  const defaultTtl = parseInt(process.env['REDIS_CACHE_TTL_DEFAULT'] || '300', 10);
   return new Date(Date.now() + defaultTtl * 1000);
 }
 

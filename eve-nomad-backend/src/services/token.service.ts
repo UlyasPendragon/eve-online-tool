@@ -13,7 +13,7 @@ const EVE_SSO_VERIFY_URL = 'https://esi.evetech.net/verify/';
 const ENCRYPTION_ALGORITHM = 'aes-256-gcm';
 const ENCRYPTION_KEY_LENGTH = 32;
 const IV_LENGTH = 16;
-const AUTH_TAG_LENGTH = 16;
+// const AUTH_TAG_LENGTH = 16; // Unused - GCM auth tag length is fixed
 
 interface TokenResponse {
   access_token: string;
@@ -38,8 +38,8 @@ interface VerifyResponse {
 export async function exchangeAuthorizationCode(
   authorizationCode: string,
 ): Promise<TokenResponse> {
-  const clientId = process.env.EVE_SSO_CLIENT_ID;
-  const clientSecret = process.env.EVE_SSO_CLIENT_SECRET;
+  const clientId = process.env['EVE_SSO_CLIENT_ID'];
+  const clientSecret = process.env['EVE_SSO_CLIENT_SECRET'];
 
   if (!clientId || !clientSecret) {
     throw new Error('EVE SSO credentials not configured');
@@ -110,8 +110,8 @@ export async function verifyAccessToken(accessToken: string): Promise<VerifyResp
  * Refresh expired access token using refresh token
  */
 export async function refreshAccessToken(refreshToken: string): Promise<TokenResponse> {
-  const clientId = process.env.EVE_SSO_CLIENT_ID;
-  const clientSecret = process.env.EVE_SSO_CLIENT_SECRET;
+  const clientId = process.env['EVE_SSO_CLIENT_ID'];
+  const clientSecret = process.env['EVE_SSO_CLIENT_SECRET'];
 
   if (!clientId || !clientSecret) {
     throw new Error('EVE SSO credentials not configured');
@@ -160,7 +160,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<TokenRes
  * Encrypt token for database storage
  */
 export function encryptToken(token: string): string {
-  const encryptionKey = process.env.ENCRYPTION_KEY;
+  const encryptionKey = process.env['ENCRYPTION_KEY'];
 
   if (!encryptionKey) {
     throw new Error('ENCRYPTION_KEY not configured');
@@ -191,7 +191,7 @@ export function encryptToken(token: string): string {
  * Decrypt token from database storage
  */
 export function decryptToken(encryptedToken: string): string {
-  const encryptionKey = process.env.ENCRYPTION_KEY;
+  const encryptionKey = process.env['ENCRYPTION_KEY'];
 
   if (!encryptionKey) {
     throw new Error('ENCRYPTION_KEY not configured');
@@ -203,7 +203,13 @@ export function decryptToken(encryptedToken: string): string {
     throw new Error('Invalid encrypted token format');
   }
 
-  const [ivBase64, authTagBase64, encryptedData] = parts;
+  const ivBase64 = parts[0];
+  const authTagBase64 = parts[1];
+  const encryptedData = parts[2];
+
+  if (!ivBase64 || !authTagBase64 || !encryptedData) {
+    throw new Error('Invalid encrypted token format - missing components');
+  }
 
   // Derive the same key
   const key = crypto.scryptSync(encryptionKey, 'salt', ENCRYPTION_KEY_LENGTH);
@@ -217,7 +223,7 @@ export function decryptToken(encryptedToken: string): string {
   decipher.setAuthTag(authTag);
 
   // Decrypt
-  let decrypted = decipher.update(encryptedData, 'base64', 'utf8');
+  let decrypted: string = decipher.update(encryptedData, 'base64', 'utf8');
   decrypted += decipher.final('utf8');
 
   return decrypted;

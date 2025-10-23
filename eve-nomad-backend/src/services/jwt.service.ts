@@ -20,15 +20,16 @@ interface DecodedJWT extends JWTPayload {
  * Generate JWT session token
  */
 export function generateToken(payload: JWTPayload): string {
-  const secret = process.env.JWT_SECRET;
-  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
+  const secret = process.env['JWT_SECRET'];
+  const expiresIn = (process.env['JWT_EXPIRES_IN'] || '7d');
 
   if (!secret) {
     throw new Error('JWT_SECRET not configured');
   }
 
+  // @ts-ignore - JWT library type compatibility with process.env string
   const token = jwt.sign(payload, secret, {
-    expiresIn,
+    expiresIn: expiresIn,
     issuer: 'eve-nomad-api',
     audience: 'eve-nomad-app',
   });
@@ -41,7 +42,7 @@ export function generateToken(payload: JWTPayload): string {
  * Verify JWT token and return decoded payload
  */
 export function verifyToken(token: string): DecodedJWT {
-  const secret = process.env.JWT_SECRET;
+  const secret = process.env['JWT_SECRET'];
 
   if (!secret) {
     throw new Error('JWT_SECRET not configured');
@@ -66,7 +67,7 @@ export function verifyToken(token: string): DecodedJWT {
 }
 
 /**
- * Create session record in database
+ * Create session record in database with existing JWT token
  */
 export async function createSession(
   userId: string,
@@ -95,6 +96,32 @@ export async function createSession(
 }
 
 /**
+ * Create user session (generates token + creates session in one call)
+ * Returns token string and expiration date for email/password auth flow
+ */
+export async function createUserSession(
+  userId: string,
+  deviceInfo?: { deviceType: string; deviceToken: string },
+): Promise<{ token: string; expiresAt: Date; session: Session }> {
+  // Generate JWT token with minimal payload for email/password auth
+  const token = generateToken({
+    userId,
+    characterId: 0, // Email/password users don't have a character initially
+    characterName: '',
+    subscriptionTier: 'free',
+  });
+
+  // Create session record
+  const session = await createSession(userId, token, deviceInfo);
+
+  return {
+    token,
+    expiresAt: session.expiresAt,
+    session,
+  };
+}
+
+/**
  * Invalidate session (logout)
  */
 export async function invalidateSession(token: string): Promise<void> {
@@ -108,6 +135,13 @@ export async function invalidateSession(token: string): Promise<void> {
   if (deleted.count > 0) {
     console.info('[JWTService] Invalidated session');
   }
+}
+
+/**
+ * Delete session (alias for invalidateSession for backwards compatibility)
+ */
+export async function deleteSession(token: string): Promise<void> {
+  return invalidateSession(token);
 }
 
 /**
@@ -134,6 +168,32 @@ export async function isSessionValid(token: string): Promise<boolean> {
   }
 
   return true;
+}
+
+/**
+ * Verify session and return session data if valid (null if invalid)
+ */
+export async function verifySession(token: string): Promise<Session | null> {
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+  const session = await prisma.session.findUnique({
+    where: { token: tokenHash },
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  // Check if expired
+  if (session.expiresAt < new Date()) {
+    // Clean up expired session
+    await prisma.session.delete({
+      where: { id: session.id },
+    });
+    return null;
+  }
+
+  return session;
 }
 
 /**

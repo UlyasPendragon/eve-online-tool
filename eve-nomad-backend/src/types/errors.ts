@@ -49,48 +49,51 @@ export class ESIError extends ApplicationError {
   }
 }
 
-export class ESIRateLimitError extends ESIError {
+export class ESIRateLimitError extends ApplicationError {
+  public readonly endpoint: string;
   public readonly retryAfter: number;
 
   constructor(endpoint: string, retryAfter: number) {
     super(
       `ESI rate limit exceeded for ${endpoint}. Retry after ${retryAfter}s`,
-      endpoint,
       429,
-      { retryAfter },
+      'ESI_RATE_LIMIT',
+      { endpoint, retryAfter },
     );
-    this.code = 'ESI_RATE_LIMIT';
-    this.statusCode = 429;
+    this.endpoint = endpoint;
     this.retryAfter = retryAfter;
   }
 }
 
-export class ESIErrorLimitError extends ESIError {
+export class ESIErrorLimitError extends ApplicationError {
+  public readonly endpoint: string;
   public readonly errorsRemaining: number;
 
   constructor(endpoint: string, errorsRemaining: number) {
     super(
       `ESI error limit approaching for ${endpoint}. ${errorsRemaining} errors remaining`,
-      endpoint,
-      420,
-      { errorsRemaining },
+      429,
+      'ESI_ERROR_LIMIT',
+      { endpoint, errorsRemaining },
     );
-    this.code = 'ESI_ERROR_LIMIT';
-    this.statusCode = 429;
+    this.endpoint = endpoint;
     this.errorsRemaining = errorsRemaining;
   }
 }
 
-export class ESINotFoundError extends ESIError {
+export class ESINotFoundError extends ApplicationError {
+  public readonly endpoint: string;
+  public readonly resourceId?: string | number;
+
   constructor(endpoint: string, resourceId?: string | number) {
     super(
       `Resource not found: ${endpoint}${resourceId ? ` (ID: ${resourceId})` : ''}`,
-      endpoint,
       404,
-      { resourceId },
+      'ESI_NOT_FOUND',
+      { endpoint, resourceId },
     );
-    this.code = 'ESI_NOT_FOUND';
-    this.statusCode = 404;
+    this.endpoint = endpoint;
+    this.resourceId = resourceId;
   }
 }
 
@@ -103,26 +106,29 @@ export class AuthenticationError extends ApplicationError {
   }
 }
 
-export class TokenExpiredError extends AuthenticationError {
+export class TokenExpiredError extends ApplicationError {
+  public readonly tokenType: string;
+
   constructor(tokenType: string = 'access') {
-    super(`${tokenType} token has expired`, { tokenType });
-    this.code = 'TOKEN_EXPIRED';
+    super(`${tokenType} token has expired`, 401, 'TOKEN_EXPIRED', { tokenType });
+    this.tokenType = tokenType;
   }
 }
 
-export class InvalidTokenError extends AuthenticationError {
+export class InvalidTokenError extends ApplicationError {
+  public readonly reason?: string;
+
   constructor(reason?: string) {
-    super('Invalid or malformed token', { reason });
-    this.code = 'INVALID_TOKEN';
+    super('Invalid or malformed token', 401, 'INVALID_TOKEN', { reason });
+    this.reason = reason;
   }
 }
 
-export class ReauthRequiredError extends AuthenticationError {
+export class ReauthRequiredError extends ApplicationError {
   public readonly characterId: number;
 
   constructor(characterId: number) {
-    super(`Re-authentication required for character ${characterId}`, { characterId });
-    this.code = 'REAUTH_REQUIRED';
+    super(`Re-authentication required for character ${characterId}`, 401, 'REAUTH_REQUIRED', { characterId });
     this.characterId = characterId;
   }
 }
@@ -136,12 +142,11 @@ export class AuthorizationError extends ApplicationError {
   }
 }
 
-export class InsufficientPermissionsError extends AuthorizationError {
+export class InsufficientPermissionsError extends ApplicationError {
   public readonly requiredScope: string;
 
   constructor(requiredScope: string) {
-    super(`Missing required scope: ${requiredScope}`, { requiredScope });
-    this.code = 'INSUFFICIENT_PERMISSIONS';
+    super(`Missing required scope: ${requiredScope}`, 403, 'INSUFFICIENT_PERMISSIONS', { requiredScope });
     this.requiredScope = requiredScope;
   }
 }
@@ -165,25 +170,25 @@ export class DatabaseError extends ApplicationError {
   }
 }
 
-export class RecordNotFoundError extends DatabaseError {
+export class RecordNotFoundError extends ApplicationError {
+  public readonly table: string;
   public readonly recordId: string | number;
 
   constructor(table: string, recordId: string | number) {
-    super(`Record not found in ${table}: ${recordId}`, 'find', table, { recordId });
-    this.code = 'RECORD_NOT_FOUND';
-    this.statusCode = 404;
+    super(`Record not found in ${table}: ${recordId}`, 404, 'RECORD_NOT_FOUND', { table, recordId });
+    this.table = table;
     this.recordId = recordId;
   }
 }
 
-export class DuplicateRecordError extends DatabaseError {
+export class DuplicateRecordError extends ApplicationError {
+  public readonly table: string;
   public readonly field: string;
   public readonly value: unknown;
 
   constructor(table: string, field: string, value: unknown) {
-    super(`Duplicate ${field} in ${table}: ${value}`, 'create', table, { field, value });
-    this.code = 'DUPLICATE_RECORD';
-    this.statusCode = 409;
+    super(`Duplicate ${field} in ${table}: ${value}`, 409, 'DUPLICATE_RECORD', { table, field, value });
+    this.table = table;
     this.field = field;
     this.value = value;
   }
@@ -203,23 +208,30 @@ export class ValidationError extends ApplicationError {
   }
 }
 
-export class InvalidInputError extends ValidationError {
+export class InvalidInputError extends ApplicationError {
+  public readonly field: string;
+  public readonly expected: string;
+  public readonly received: unknown;
+
   constructor(field: string, expected: string, received: unknown) {
     super(
       `Invalid input for ${field}. Expected ${expected}, received ${typeof received}`,
-      field,
-      received,
-      { expected },
+      422,
+      'INVALID_INPUT',
+      { field, expected, received },
     );
-    this.code = 'INVALID_INPUT';
+    this.field = field;
+    this.expected = expected;
+    this.received = received;
   }
 }
 
-export class MissingFieldError extends ValidationError {
+export class MissingFieldError extends ApplicationError {
+  public readonly field: string;
+
   constructor(field: string) {
-    super(`Required field missing: ${field}`, field);
-    this.code = 'MISSING_FIELD';
-    this.statusCode = 400;
+    super(`Required field missing: ${field}`, 400, 'MISSING_FIELD', { field });
+    this.field = field;
   }
 }
 
@@ -247,10 +259,14 @@ export class PaymentError extends ApplicationError {
   }
 }
 
-export class PaymentFailedError extends PaymentError {
+export class PaymentFailedError extends ApplicationError {
+  public readonly reason: string;
+  public readonly paymentId?: string;
+
   constructor(reason: string, paymentId?: string) {
-    super(`Payment failed: ${reason}`, paymentId, { reason });
-    this.code = 'PAYMENT_FAILED';
+    super(`Payment failed: ${reason}`, 402, 'PAYMENT_FAILED', { reason, paymentId });
+    this.reason = reason;
+    this.paymentId = paymentId;
   }
 }
 

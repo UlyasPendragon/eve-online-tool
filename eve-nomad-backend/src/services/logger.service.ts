@@ -1,5 +1,5 @@
 import pino, { Logger as PinoLogger } from 'pino';
-import { captureException, captureMessage, addBreadcrumb } from '../config/sentry.config';
+import { captureException, addBreadcrumb } from '../config/sentry.config';
 
 /**
  * Enhanced Logger Service
@@ -23,7 +23,7 @@ const REDACT_FIELDS = [
 
 // Create base Pino logger
 const baseLogger: PinoLogger = pino({
-  level: process.env.LOG_LEVEL || 'info',
+  level: process.env['LOG_LEVEL'] || 'info',
 
   // Redact sensitive fields
   redact: {
@@ -33,7 +33,7 @@ const baseLogger: PinoLogger = pino({
 
   // Pretty printing for development
   transport:
-    process.env.NODE_ENV === 'development' && process.env.LOG_PRETTY !== 'false'
+    process.env['NODE_ENV'] === 'development' && process.env['LOG_PRETTY'] !== 'false'
       ? {
           target: 'pino-pretty',
           options: {
@@ -47,7 +47,7 @@ const baseLogger: PinoLogger = pino({
 
   // Base fields
   base: {
-    env: process.env.NODE_ENV || 'development',
+    env: process.env['NODE_ENV'] || 'development',
     service: 'eve-nomad-backend',
   },
 
@@ -114,7 +114,7 @@ export class Logger {
       captureException(error, {
         tags: {
           logLevel: 'error',
-          ...(logData.endpoint && { endpoint: String(logData.endpoint) }),
+          ...(logData['endpoint'] ? { endpoint: String(logData['endpoint']) } : {}),
         },
         extra: logData,
       });
@@ -140,7 +140,7 @@ export class Logger {
       captureException(error, {
         tags: {
           logLevel: 'fatal',
-          ...(logData.endpoint && { endpoint: String(logData.endpoint) }),
+          ...(logData['endpoint'] ? { endpoint: String(logData['endpoint']) } : {}),
         },
         extra: logData,
       });

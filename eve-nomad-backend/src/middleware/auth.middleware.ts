@@ -102,7 +102,7 @@ export async function authMiddleware(
  */
 export async function optionalAuthMiddleware(
   request: FastifyRequest,
-  reply: FastifyReply,
+  _reply: FastifyReply,
 ): Promise<void> {
   try {
     const authHeader = request.headers.authorization;
