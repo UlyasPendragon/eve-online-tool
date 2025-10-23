@@ -7,7 +7,7 @@ import crypto from 'crypto';
  */
 
 // Store state tokens temporarily (in production, use Redis)
-const stateStore = new Map<string, { timestamp: number }>();
+const stateStore = new Map<string, { timestamp: number; mobile?: boolean }>();
 
 // Clean up old state tokens every 10 minutes
 setInterval(() => {
@@ -22,15 +22,31 @@ setInterval(() => {
 /**
  * GET /auth/login
  * Initiates OAuth flow by redirecting to EVE SSO
+ *
+ * Supports optional `mobile=true` query parameter for mobile app OAuth.
+ * When mobile=true, state includes mobile flag for callback handling.
  */
-export async function loginHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function loginHandler(
+  request: FastifyRequest<{
+    Querystring: {
+      mobile?: string;
+    };
+  }>,
+  reply: FastifyReply,
+) {
   // Generate random state for CSRF protection
   const state = crypto.randomBytes(32).toString('hex');
-  stateStore.set(state, { timestamp: Date.now() });
+  const isMobile = request.query.mobile === 'true';
+
+  // Store state with mobile flag
+  stateStore.set(state, {
+    timestamp: Date.now(),
+    mobile: isMobile,
+  });
 
   // Required OAuth parameters
-  const clientId = process.env.EVE_SSO_CLIENT_ID;
-  const callbackUrl = process.env.EVE_SSO_CALLBACK_URL;
+  const clientId = process.env['EVE_SSO_CLIENT_ID'];
+  const callbackUrl = process.env['EVE_SSO_CALLBACK_URL'];
 
   if (!clientId || !callbackUrl) {
     return reply.status(500).send({
@@ -106,12 +122,15 @@ export async function callbackHandler(
   }
 
   // Verify state token (CSRF protection)
-  if (!stateStore.has(state)) {
+  const stateData = stateStore.get(state);
+  if (!stateData) {
     return reply.status(400).send({
       error: 'Invalid state',
       message: 'State token is invalid or expired. Please try logging in again.',
     });
   }
+
+  const isMobile = stateData.mobile || false;
 
   // Remove used state token
   stateStore.delete(state);
@@ -159,6 +178,13 @@ export async function callbackHandler(
     await jwtService.createSession(user.id, jwtToken);
 
     // Step 8: Return JWT token to client
+    // For mobile apps, redirect to deep link with token
+    if (isMobile) {
+      const deepLinkUrl = `eveapp://auth/callback?token=${encodeURIComponent(jwtToken)}`;
+      return reply.redirect(deepLinkUrl);
+    }
+
+    // For web clients, return JSON response
     return reply.send({
       success: true,
       message: 'Authentication successful',
@@ -225,6 +251,83 @@ export async function logoutHandler(request: FastifyRequest, reply: FastifyReply
     return reply.status(500).send({
       error: 'Logout failed',
       message: 'Failed to invalidate session',
+    });
+  }
+}
+
+/**
+ * POST /auth/refresh
+ * Refreshes JWT token by generating a new one with extended expiration
+ */
+export async function refreshHandler(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    // Extract JWT from Authorization header
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return reply.status(401).send({
+        error: 'Unauthorized',
+        message: 'Missing or invalid Authorization header',
+      });
+    }
+
+    const token = authHeader.substring(7);
+
+    // Verify current JWT token
+    const jwtService = await import('../services/jwt.service');
+    const decoded = jwtService.verifyToken(token);
+
+    // Check if session is still valid
+    const isValid = await jwtService.isSessionValid(token);
+
+    if (!isValid) {
+      return reply.status(401).send({
+        error: 'Unauthorized',
+        message: 'Session expired or invalid',
+      });
+    }
+
+    // Generate new JWT with same payload but fresh expiration
+    const newToken = jwtService.generateToken({
+      userId: decoded.userId,
+      characterId: decoded.characterId,
+      characterName: decoded.characterName,
+      subscriptionTier: decoded.subscriptionTier,
+    });
+
+    // Invalidate old session
+    await jwtService.invalidateSession(token);
+
+    // Create new session
+    await jwtService.createSession(decoded.userId, newToken);
+
+    return reply.send({
+      success: true,
+      message: 'Token refreshed successfully',
+      token: newToken,
+    });
+  } catch (error) {
+    console.error('[AuthController] Refresh error:', error);
+
+    if (error instanceof Error) {
+      if (error.message === 'TOKEN_EXPIRED') {
+        return reply.status(401).send({
+          error: 'Unauthorized',
+          message: 'Token expired',
+        });
+      }
+
+      if (error.message === 'TOKEN_INVALID') {
+        return reply.status(401).send({
+          error: 'Unauthorized',
+          message: 'Invalid token',
+        });
+      }
+    }
+
+    return reply.status(500).send({
+      error: 'Refresh failed',
+      message: 'Failed to refresh token',
     });
   }
 }

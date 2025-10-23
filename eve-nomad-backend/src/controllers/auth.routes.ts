@@ -3,6 +3,7 @@ import {
   loginHandler,
   callbackHandler,
   logoutHandler,
+  refreshHandler,
   verifyHandler,
 } from './auth.controller';
 
@@ -110,6 +111,43 @@ export async function authRoutes(fastify: FastifyInstance) {
       },
     },
     logoutHandler,
+  );
+
+  // Refresh token
+  fastify.post(
+    '/auth/refresh',
+    {
+      schema: {
+        tags: ['auth'],
+        summary: 'Refresh token',
+        description: 'Generates a new JWT token with extended expiration',
+        headers: {
+          type: 'object',
+          properties: {
+            authorization: { type: 'string', description: 'Bearer <token>' },
+          },
+          required: ['authorization'],
+        },
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              success: { type: 'boolean' },
+              message: { type: 'string' },
+              token: { type: 'string' },
+            },
+          },
+          401: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+    refreshHandler,
   );
 
   // Verify token
