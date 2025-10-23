@@ -13,6 +13,7 @@ import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { authRoutes } from './controllers/auth.routes';
 import { characterRoutes } from './controllers/character.routes';
+// import { registerUserAuthRoutes } from './controllers/user-auth.routes'; // EVE-19 (on separate branch)
 import { startTokenRefreshWorker } from './jobs/token-refresh.job';
 import { startESIDataRefreshWorker } from './jobs/esi-refresh.job';
 import { startHistoricalDataCollectionWorker } from './jobs/historical-data.job';
@@ -34,9 +35,9 @@ validateRequiredConfig();
 // Initialize Fastify instance
 const fastify = Fastify({
   logger: {
-    level: process.env.LOG_LEVEL || 'info',
+    level: process.env['LOG_LEVEL'] || 'info',
     transport:
-      process.env.NODE_ENV === 'development'
+      process.env['NODE_ENV'] === 'development'
         ? {
             target: 'pino-pretty',
             options: {
@@ -68,8 +69,8 @@ async function registerPlugins() {
 
   // CORS
   await fastify.register(cors, {
-    origin: process.env.CORS_ORIGIN?.split(',') || true,
-    credentials: process.env.CORS_CREDENTIALS === 'true',
+    origin: process.env['CORS_ORIGIN']?.split(',') || true,
+    credentials: process.env['CORS_CREDENTIALS'] === 'true',
   });
 
   // Swagger API documentation
@@ -82,7 +83,7 @@ async function registerPlugins() {
       },
       servers: [
         {
-          url: `http://localhost:${process.env.PORT || 3000}`,
+          url: `http://localhost:${process.env['PORT'] || 3000}`,
           description: 'Development server',
         },
       ],
@@ -110,8 +111,11 @@ async function registerRoutes() {
   fastify.setErrorHandler(errorHandler);
   fastify.setNotFoundHandler(notFoundHandler);
 
-  // Authentication routes
+  // OAuth authentication routes (EVE SSO)
   await fastify.register(authRoutes);
+
+  // User authentication routes (email/password)
+  // await fastify.register(registerUserAuthRoutes); // EVE-19 (on separate branch)
 
   // Character management routes
   await fastify.register(characterRoutes);
@@ -146,7 +150,7 @@ async function registerRoutes() {
         status: 'ok',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
-        environment: process.env.NODE_ENV || 'development',
+        environment: process.env['NODE_ENV'] || 'development',
         version: '0.1.0',
       });
     },
@@ -174,8 +178,8 @@ async function start() {
     await registerPlugins();
     await registerRoutes();
 
-    const port = parseInt(process.env.PORT || '3000', 10);
-    const host = process.env.HOST || '0.0.0.0';
+    const port = parseInt(process.env['PORT'] || '3000', 10);
+    const host = process.env['HOST'] || '0.0.0.0';
 
     await fastify.listen({ port, host });
 
@@ -205,7 +209,7 @@ async function start() {
     logger.info('EVE Nomad Backend API Server started', {
       port,
       host,
-      environment: process.env.NODE_ENV || 'development',
+      environment: process.env['NODE_ENV'] || 'development',
       nodeVersion: process.version,
       endpoints: {
         root: `http://localhost:${port}`,
@@ -223,7 +227,7 @@ async function start() {
 ║   📚  Docs: http://localhost:${port}/docs                   ║
 ║   🏥  Health: http://localhost:${port}/health               ║
 ║                                                            ║
-║   Environment: ${process.env.NODE_ENV || 'development'}                                   ║
+║   Environment: ${process.env['NODE_ENV'] || 'development'}                                   ║
 ║   Node.js: ${process.version}                                  ║
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝

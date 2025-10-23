@@ -26,7 +26,7 @@ export function validateRequiredConfig(): void {
   }
 
   // Validate ENCRYPTION_KEY length (must be 32 bytes for AES-256)
-  const encryptionKey = process.env.ENCRYPTION_KEY;
+  const encryptionKey = process.env['ENCRYPTION_KEY'];
   if (encryptionKey && encryptionKey.length !== 64) {
     // 32 bytes = 64 hex chars
     const error = new Error('ENCRYPTION_KEY must be 32 bytes (64 hex characters)');

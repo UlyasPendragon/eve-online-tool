@@ -3,7 +3,6 @@ import { createLogger } from '../../services/logger.service';
 import * as queueService from '../../services/queue.service';
 import * as metricsService from '../../services/job-metrics.service';
 import * as schedulerService from '../../services/scheduler.service';
-import { JobType, JobPriority } from '../../types/jobs';
 
 /**
  * Admin Job Management Routes
@@ -37,7 +36,7 @@ export async function adminJobRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         const health = await metricsService.getJobSystemHealth();
         return reply.send(health);
@@ -61,7 +60,7 @@ export async function adminJobRoutes(fastify: FastifyInstance) {
         description: 'Returns comprehensive metrics for all job queues',
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         const summary = await metricsService.getJobActivitySummary();
         return reply.send(summary);
@@ -85,7 +84,7 @@ export async function adminJobRoutes(fastify: FastifyInstance) {
         description: 'Returns metrics for all job queues',
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         const metrics = await metricsService.getAllQueueMetrics();
         return reply.send({ queues: metrics });
@@ -466,7 +465,7 @@ export async function adminJobRoutes(fastify: FastifyInstance) {
         summary: 'Get scheduled jobs status',
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         const summary = schedulerService.getSchedulerSummary();
         return reply.send(summary);

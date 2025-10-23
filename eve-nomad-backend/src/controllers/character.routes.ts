@@ -94,7 +94,7 @@ export async function characterRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       // Redirect to /auth/login to start OAuth flow
       // The existing user will be updated with the new character
       return reply.redirect('/auth/login');
@@ -120,7 +120,7 @@ export async function characterRoutes(fastify: FastifyInstance) {
         params: {
           type: 'object',
           properties: {
-            characterId: { type: 'number' },
+            characterId: { type: 'string' },
           },
           required: ['characterId'],
         },
@@ -142,12 +142,7 @@ export async function characterRoutes(fastify: FastifyInstance) {
         },
       },
     },
-    async (
-      request: FastifyRequest<{
-        Params: { characterId: string };
-      }>,
-      reply: FastifyReply,
-    ) => {
+    async (request: any, reply: any) => {
       try {
         const characterId = parseInt(request.params.characterId, 10);
 

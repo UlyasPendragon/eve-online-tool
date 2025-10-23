@@ -7,7 +7,7 @@ import crypto from 'crypto';
  */
 
 // Store state tokens temporarily (in production, use Redis)
-const stateStore = new Map<string, { timestamp: number }>();
+const stateStore = new Map<string, { timestamp: number; mobile?: boolean }>();
 
 // Clean up old state tokens every 10 minutes
 setInterval(() => {
@@ -22,15 +22,31 @@ setInterval(() => {
 /**
  * GET /auth/login
  * Initiates OAuth flow by redirecting to EVE SSO
+ *
+ * Supports optional `mobile=true` query parameter for mobile app OAuth.
+ * When mobile=true, state includes mobile flag for callback handling.
  */
-export async function loginHandler(request: FastifyRequest, reply: FastifyReply) {
+export async function loginHandler(
+  request: FastifyRequest<{
+    Querystring: {
+      mobile?: string;
+    };
+  }>,
+  reply: FastifyReply,
+) {
   // Generate random state for CSRF protection
   const state = crypto.randomBytes(32).toString('hex');
-  stateStore.set(state, { timestamp: Date.now() });
+  const isMobile = request.query.mobile === 'true';
+
+  // Store state with mobile flag
+  stateStore.set(state, {
+    timestamp: Date.now(),
+    mobile: isMobile,
+  });
 
   // Required OAuth parameters
-  const clientId = process.env.EVE_SSO_CLIENT_ID;
-  const callbackUrl = process.env.EVE_SSO_CALLBACK_URL;
+  const clientId = process.env['EVE_SSO_CLIENT_ID'];
+  const callbackUrl = process.env['EVE_SSO_CALLBACK_URL'];
 
   if (!clientId || !callbackUrl) {
     return reply.status(500).send({

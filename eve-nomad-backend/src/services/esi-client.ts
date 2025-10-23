@@ -16,9 +16,9 @@ export class ESIClient {
   private userAgent: string;
 
   constructor() {
-    this.baseURL = process.env.ESI_BASE_URL || 'https://esi.evetech.net';
+    this.baseURL = process.env['ESI_BASE_URL'] || 'https://esi.evetech.net';
     this.userAgent =
-      process.env.ESI_USER_AGENT || 'EVE Nomad (contact@evenomad.com)';
+      process.env['ESI_USER_AGENT'] || 'EVE Nomad (contact@evenomad.com)';
 
     this.client = axios.create({
       baseURL: this.baseURL,
@@ -136,9 +136,9 @@ export class ESIClient {
     if (status === 200) {
       const expiresAt = cache.calculateExpiration(
         headers['cache-control'],
-        headers.expires,
+        headers['expires'],
       );
-      const etag = headers.etag;
+      const etag = headers['etag'];
 
       await cache.set(cacheKey, data, expiresAt, etag);
       return data as T;

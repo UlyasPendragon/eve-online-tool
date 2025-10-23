@@ -7,9 +7,9 @@ import { nodeProfilingIntegration } from '@sentry/profiling-node';
  */
 
 export function initializeSentry(): void {
-  const dsn = process.env.SENTRY_DSN;
-  const environment = process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development';
-  const enabled = process.env.SENTRY_ENABLED === 'true';
+  const dsn = process.env['SENTRY_DSN'];
+  const environment = process.env['SENTRY_ENVIRONMENT'] || process.env['NODE_ENV'] || 'development';
+  const enabled = process.env['SENTRY_ENABLED'] === 'true';
 
   // Skip initialization if Sentry is disabled or DSN is missing
   if (!enabled || !dsn) {
@@ -23,10 +23,10 @@ export function initializeSentry(): void {
 
     // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
     // We recommend adjusting this value in production
-    tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE || '0.1'),
+    tracesSampleRate: parseFloat(process.env['SENTRY_TRACES_SAMPLE_RATE'] || '0.1'),
 
     // Set sampling rate for profiling - this is relative to tracesSampleRate
-    profilesSampleRate: parseFloat(process.env.SENTRY_PROFILES_SAMPLE_RATE || '0.1'),
+    profilesSampleRate: parseFloat(process.env['SENTRY_PROFILES_SAMPLE_RATE'] || '0.1'),
 
     // Integrations
     integrations: [
@@ -52,8 +52,8 @@ export function initializeSentry(): void {
         delete event.request.cookies;
 
         // Redact authorization headers
-        if (event.request.headers?.authorization) {
-          event.request.headers.authorization = '[REDACTED]';
+        if (event.request.headers?.['authorization']) {
+          event.request.headers['authorization'] = '[REDACTED]';
         }
       }
 
@@ -64,8 +64,8 @@ export function initializeSentry(): void {
     beforeBreadcrumb(breadcrumb) {
       // Redact sensitive data in breadcrumbs
       if (breadcrumb.category === 'http' && breadcrumb.data) {
-        if (breadcrumb.data.authorization) {
-          breadcrumb.data.authorization = '[REDACTED]';
+        if (breadcrumb.data['authorization']) {
+          breadcrumb.data['authorization'] = '[REDACTED]';
         }
       }
 
