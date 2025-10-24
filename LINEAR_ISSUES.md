@@ -1,192 +1,225 @@
 # Linear Issues Index
 
-**Last Updated:** 2025-01-24 (Auto-maintained by Claude Code)
-**Total Issues:** 60 (3 In Progress, 23 Completed, 34 Backlog)
+**Last Updated:** 2025-10-24 (Auto-maintained by Claude Code)
+**Total Issues:** 55 (3 In Progress, 27 Completed, 25 Backlog)
+
+This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
+
+**Linear Workspace:** https://linear.app/eve-online-tool
+**GitHub Repository:** https://github.com/UlyasPendragon/eve-online-tool
 
 ---
 
-## 🚧 In Progress
+## 🚧 In Progress (3 issues)
 
-### EVE-80: Implement EVE SSO OAuth login flow
+### Mobile Frontend - Character Management
+
+#### EVE-85: Fetch and display character list
 - **Status:** In Progress
 - **Project:** EVE Nomad - Mobile Companion App
 - **Assignee:** Curtis Reker
 - **Created:** 2025-10-23
-- **Description:** Implement OAuth 2.0 authorization code flow with EVE SSO for user authentication
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-80
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- **Description:** Create API wrapper and UI for displaying user's characters with mock data strategy for rapid UI development
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-85
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/31
 
-### EVE-81: Build login and registration screens
+#### EVE-86: Implement character switcher functionality
 - **Status:** In Progress
 - **Project:** EVE Nomad - Mobile Companion App
 - **Assignee:** Curtis Reker
 - **Created:** 2025-10-23
-- **Description:** Create user-friendly login and registration screens with email/password and EVE SSO options
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-81
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- **Description:** Build character switcher component for multi-character support. Store active character in Zustand, persist with MMKV
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-86
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/31
 
-### EVE-82: Implement automatic token refresh mechanism
+#### EVE-87: Create character detail view
 - **Status:** In Progress
 - **Project:** EVE Nomad - Mobile Companion App
 - **Assignee:** Curtis Reker
 - **Created:** 2025-10-23
-- **Description:** Build automatic JWT token refresh to keep users logged in without manual re-authentication
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-82
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- **Description:** Build character detail screen with comprehensive profile, stats, and associated data (wallet, skills, market orders)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-87
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/31
 
 ---
 
-## ✅ Completed Issues
+## ✅ Completed Issues (27 issues)
 
-### Foundation & Infrastructure (16 completed)
+### Foundation & Infrastructure (18 completed)
 
-#### EVE-78: Set up React Query for server state management
-- **Completed:** 2025-10-23
-- **Description:** Configure TanStack Query for efficient API data fetching and caching
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-78
-
-#### EVE-76: Configure environment variables and API client
-- **Completed:** 2025-10-23
-- **Description:** Set up environment configuration and create API client for backend communication
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-76
-
-#### EVE-75: Create EVE-themed design system and UI components
-- **Completed:** 2025-10-23
-- **Description:** Build comprehensive design system with EVE Online-themed colors and reusable UI components
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-75
-
-#### EVE-74: Set up Expo Router for file-based navigation
-- **Completed:** 2025-10-23
-- **Description:** Implement file-based routing using Expo Router for app navigation structure
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-74
-
-#### EVE-72: Initialize Expo project with TypeScript
-- **Completed:** 2025-10-23
-- **Description:** Set up initial Expo project with TypeScript configuration for EVE Nomad Mobile app
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-72
+#### EVE-97: Create comprehensive backend testing strategy and test suite
+- **Completed:** 2025-10-24
+- **Description:** Designed comprehensive testing strategy with unit tests, integration tests, and E2E tests for backend
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-97
 
 #### EVE-70: Fix TypeScript strict mode errors
 - **Completed:** 2025-10-23
-- **Description:** Resolve all TypeScript strict mode compilation errors preventing CI from passing
+- **Description:** Resolved all TypeScript strict mode compilation errors preventing CI from passing
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-70
 - **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/29
 
-#### EVE-69: CRITICAL - Fix race condition in character creation
+#### EVE-69: Fix race condition in character creation during OAuth flow
 - **Completed:** 2025-10-22
 - **Description:** Fixed race condition using Prisma atomic upsert operation
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-69
 
-#### EVE-68: CRITICAL - Add error handling for token encryption
+#### EVE-68: Add error handling for token encryption operations
 - **Completed:** 2025-10-22
 - **Description:** Added config validator and wrapped encryption calls in try-catch
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-68
 
-#### EVE-67: CRITICAL - Replace console.log with Pino logger
+#### EVE-67: Replace console.log with production-grade Pino logging
 - **Completed:** 2025-10-22
-- **Description:** Replaced all console.log with Pino structured logging
+- **Description:** Replaced all console.log with Pino structured logging with Sentry integration
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-67
 
-#### EVE-66: CRITICAL - Replace generic Error classes
+#### EVE-66: Replace generic Error classes with custom domain errors
 - **Completed:** 2025-10-22
-- **Description:** Implemented custom domain error classes (RecordNotFoundError, etc.)
+- **Description:** Implemented custom domain error classes (RecordNotFoundError, ReauthRequiredError, AuthorizationError)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-66
 
-#### EVE-65: CRITICAL - Refactor to use shared Prisma client
+#### EVE-65: Implement Prisma client singleton pattern
 - **Completed:** 2025-10-22
-- **Description:** Created getPrisma() utility to prevent connection pool exhaustion
+- **Description:** Created getPrisma() utility to prevent connection pool exhaustion and memory leaks
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-65
 
-#### EVE-64: Set up GitHub repository and version control
+#### EVE-64: Set up GitHub repository with version control
 - **Completed:** 2025-10-22
-- **Description:** Establish GitHub repository with proper version control and collaboration workflows
+- **Description:** Established GitHub repository with proper version control, PR templates, and Linear integration
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-64
 
-#### EVE-63: Implement Strategic Claude Code Subagents
+#### EVE-63: Implement Claude Code Subagents for specialized development tasks
 - **Completed:** 2025-10-18
-- **Description:** Created 6 high-value, token-efficient subagents for quality & security
+- **Description:** Created 6 strategic subagents for quality, security, and domain expertise
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-63
 
-#### EVE-62: Fix OAuth token verification 404 error
+#### EVE-21: Create developer onboarding documentation
 - **Completed:** 2025-10-18
-- **Description:** Fixed incorrect ESI endpoint URL in token verification service
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-62
+- **Description:** Created comprehensive setup and testing guides for backend development
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-21
 
-#### EVE-38: Implement background job processing system
+#### EVE-20: Write comprehensive EVE SSO OAuth setup guide
 - **Completed:** 2025-10-18
-- **Description:** Created robust background job system with BullMQ for asynchronous tasks
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-38
+- **Description:** Documented complete OAuth registration and configuration process
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-20
 
-#### EVE-18: Set up error tracking and logging system
+#### EVE-15: Configure logging and error tracking (Sentry + Pino)
 - **Completed:** 2025-10-18
-- **Description:** Implemented comprehensive error tracking with Sentry and Pino logging
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-18
+- **Description:** Implemented production-grade error tracking with Sentry and structured logging with Pino
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-15
 
-#### EVE-13: Implement ESI data caching layer
+#### EVE-14: Set up continuous integration pipeline
+- **Completed:** 2025-10-18
+- **Description:** Created GitHub Actions CI workflow with lint, typecheck, test, and security checks
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-14
+
+#### EVE-13: Implement ESI data caching layer with Redis
 - **Completed:** 2025-10-18
 - **Description:** Built caching system that stores ESI responses according to cache headers
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-13
 
-#### EVE-12: Create basic ESI API client library
+#### EVE-12: Expand ESI client library with core endpoints
 - **Completed:** 2025-10-18
 - **Description:** Built reusable API client library for ESI calls with authentication and error handling
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-12
 
-#### EVE-11: Design and implement database schema
+#### EVE-11: Refine database schema for MVP
 - **Completed:** 2025-10-18
-- **Description:** Created comprehensive Prisma schema with 7 models for user accounts and data
+- **Description:** Created comprehensive Prisma schema with user accounts, characters, and sessions
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-11
 
-#### EVE-10: Implement ESI OAuth authentication system
+#### EVE-10: Implement ESI OAuth authentication flow (Backend)
 - **Completed:** 2025-10-18
 - **Description:** Built secure OAuth authentication flow with EVE SSO for ESI data access
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-10
 
-#### EVE-9: Set up development environment for ESI integration
+#### EVE-9: Set up development environment
 - **Completed:** 2025-10-17
-- **Description:** Configured local and production development environments with Node.js + TypeScript stack
+- **Description:** Configured development environment with Node.js + TypeScript + Fastify + PostgreSQL + Redis
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-9
 
-#### EVE-7: Review CCP Developer License Agreement
+#### EVE-7: Write Terms of Service for EVE Nomad
 - **Completed:** 2025-10-17
-- **Description:** Thoroughly reviewed and documented CCP's Developer License Agreement requirements
+- **Description:** Reviewed and documented CCP's Developer License Agreement requirements
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-7
+
+### Mobile App - EVE Nomad (9 completed)
+
+#### EVE-84: Implement logout functionality with token cleanup (Mobile)
+- **Completed:** 2025-10-24
+- **Description:** Complete logout service with backend session invalidation, token removal, storage clear, and cache management
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-84
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+
+#### EVE-83: Implement protected route authentication guard (Mobile)
+- **Completed:** 2025-10-24
+- **Description:** AuthGuard component with JWT validation, automatic redirect to login with returnUrl preservation
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-83
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+
+#### EVE-82: Implement automatic token refresh mechanism (Mobile)
+- **Completed:** 2025-10-24
+- **Description:** Proactive and reactive token refresh strategies to keep users logged in
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-82
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+
+#### EVE-81: Create registration screen with email/password (Mobile)
+- **Completed:** 2025-10-24
+- **Description:** User-friendly registration screen with validation and error handling
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-81
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+
+#### EVE-80: Implement OAuth login with EVE SSO (Mobile)
+- **Completed:** 2025-10-24
+- **Description:** OAuth 2.0 authorization code flow with EVE SSO using deep linking (eveapp:// scheme)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-80
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/28
+
+#### EVE-78: Create base UI component library
+- **Completed:** 2025-10-23
+- **Description:** Built comprehensive UI component library (Button, Text, LoadingSpinner, etc.)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-78
+
+#### EVE-76: Configure Axios API client with JWT auth
+- **Completed:** 2025-10-23
+- **Description:** Set up Axios client with automatic JWT token injection and error handling
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-76
+
+#### EVE-75: Configure React Query for server state management
+- **Completed:** 2025-10-23
+- **Description:** Set up TanStack Query v5 for efficient API data fetching and caching
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-75
+
+#### EVE-74: Set up Expo Router for file-based navigation
+- **Completed:** 2025-10-23
+- **Description:** Implemented file-based routing using Expo Router
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-74
+
+#### EVE-72: Initialize React Native project with Expo
+- **Completed:** 2025-10-23
+- **Description:** Set up initial Expo project with TypeScript configuration for EVE Nomad Mobile app
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-72
 
 ---
 
-## 📋 Backlog Issues
+## 📋 Backlog (25 issues)
 
-### Critical Issues
+### Foundation & Infrastructure (6 backlog)
 
-#### EVE-97: Fix Critical ESI Integration Issues
-- **Status:** Backlog
-- **Priority:** CRITICAL
-- **Created:** 2025-10-23
-- **Description:** 5 critical ESI issues blocking core functionality (private get() method, missing pagination, console.log usage, etc.)
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-97
-- **GitHub:** https://github.com/UlyasPendragon/eve-online-tool/issues/30
-
-#### EVE-71: GitHub Actions billing lock preventing CI
-- **Status:** Backlog
+#### EVE-71: GitHub Actions billing lock preventing CI from running
 - **Created:** 2025-10-22
+- **Priority:** Bug
 - **Description:** GitHub Actions billing lock error preventing CI workflows from running
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-71
-- **GitHub:** https://github.com/UlyasPendragon/eve-online-tool/issues/2
-
-### Foundation & Infrastructure (7 backlog)
 
 #### EVE-61: Seek CCP clarification on gray area compliance items
 - **Created:** 2025-10-17
-- **Description:** Request official clarification from CCP on character limits, historical data, and other gray areas
+- **Description:** Request official clarification from CCP on character limits, historical data, and aggregation analytics
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-61
-
-#### EVE-59: Monitor and optimize key business metrics
-- **Created:** 2025-10-17
-- **Description:** Establish continuous monitoring of KPIs to ensure business sustainability
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-59
 
 #### EVE-39: Create analytics and metrics tracking system
 - **Created:** 2025-10-17
-- **Description:** Implement comprehensive analytics to track user behavior and app performance
+- **Description:** Implement comprehensive analytics to track user behavior, performance, and business metrics
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-39
 
 #### EVE-36: Build subscription management and billing system
@@ -196,25 +229,15 @@
 
 #### EVE-19: Implement user account management system
 - **Created:** 2025-10-17
-- **Description:** Build complete user account system with registration, login, and profile management
+- **Description:** Build complete user account system with registration, login, password management, 2FA
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-19
 
 #### EVE-8: Apply for EVE Partner Program
 - **Created:** 2025-10-17
-- **Description:** Apply for acceptance into CCP's EVE Partner Program for legitimacy and visibility
+- **Description:** Apply for acceptance into CCP's EVE Partner Program (target after 1,000+ MAU)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-8
 
-### EVE Nomad Mobile App - Authentication Phase (3 backlog)
-
-#### EVE-84: Build logout functionality with token cleanup
-- **Created:** 2025-10-23
-- **Description:** Implement secure logout that clears all tokens and session data
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-84
-
-#### EVE-83: Create protected route authentication guard
-- **Created:** 2025-10-23
-- **Description:** Implement route protection to prevent unauthenticated access to app features
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-83
+### Mobile App - Frontend Setup (3 backlog)
 
 #### EVE-79: Create global state management with Zustand
 - **Created:** 2025-10-23
@@ -231,7 +254,7 @@
 - **Description:** Set up code quality tooling for consistent formatting and type safety
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-73
 
-### EVE Nomad Mobile App - Character Management (5 backlog)
+### Mobile App - Character Management (2 backlog)
 
 #### EVE-89: Implement remove character functionality
 - **Created:** 2025-10-23
@@ -243,26 +266,11 @@
 - **Description:** Allow users to link additional EVE characters via EVE SSO OAuth
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-88
 
-#### EVE-87: Create character detail view
-- **Created:** 2025-10-23
-- **Description:** Build comprehensive character detail screen showing profile, stats, and account info
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-87
-
-#### EVE-86: Implement character switcher functionality
-- **Created:** 2025-10-23
-- **Description:** Allow users to switch between multiple characters and update active character context
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-86
-
-#### EVE-85: Fetch and display character list
-- **Created:** 2025-10-23
-- **Description:** Retrieve and display all EVE characters linked to the user's account
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-85
-
-### EVE Nomad Mobile App - Skills & Dashboard (5 backlog)
+### Mobile App - Skills & Dashboard (5 backlog)
 
 #### EVE-95: Create dashboard home screen with widget layout
 - **Created:** 2025-10-23
-- **Description:** Build main dashboard screen showing overview widgets for key character information
+- **Description:** Build main dashboard screen showing overview widgets (skills, wallet, market, character)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-95
 
 #### EVE-94: Implement freemium feature gating system
@@ -290,34 +298,12 @@
 - **Description:** Create UI component to display active character's skill queue with training progress
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-90
 
-### EVE Nomad Mobile App - Paid Tier Features (4 backlog)
-
-#### EVE-30: [Paid Tier] Create Industry & PI dashboard
-- **Created:** 2025-10-17
-- **Description:** Build consolidated dashboard for monitoring manufacturing jobs and Planetary Interaction
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-30
-
-#### EVE-29: [Paid Tier] Build advanced asset browser
-- **Created:** 2025-10-17
-- **Description:** Create powerful, searchable asset browser showing all items across all characters
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-29
-
-#### EVE-28: [Paid Tier] Create market order management interface
-- **Created:** 2025-10-17
-- **Description:** Allow users to view and manage market orders from mobile
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-28
-
-#### EVE-27: [Paid Tier] Build full EVE Mail client
-- **Created:** 2025-10-17
-- **Description:** Create complete, functional EVE Mail client for reading, composing, and managing in-game mail
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-27
-
-### EVE Nomad Mobile App - Freemium Implementation (4 backlog)
+### Mobile App - Freemium & Subscriptions (3 backlog)
 
 #### EVE-47: Design free tier optimization to drive conversions
 - **Created:** 2025-10-17
+- **⚠️ CCP Compliance:** Requires CCP clarification on character limits
 - **Description:** Optimize free tier experience to showcase app value while creating natural upgrade moments
-- **CCP Compliance:** Requires CCP clarification on character limits
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-47
 
 #### EVE-46: Implement subscription management portal
@@ -330,29 +316,12 @@
 - **Description:** Create smooth, compelling upgrade experience that converts free users to paid subscribers
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-43
 
-#### EVE-42: Implement feature access control based on subscription tier
-- **Created:** 2025-10-17
-- **Description:** Create robust system to enforce feature access based on user subscription tier
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-42
-
-### EVE Nomad Mobile App - Deployment & CI/CD (2 backlog)
+### Community & Marketing (4 backlog)
 
 #### EVE-58: Create regular update and release cadence
 - **Created:** 2025-10-17
 - **Description:** Establish predictable, sustainable release schedule to maintain user trust
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-58
-
-#### EVE-57: Establish continuous integration and deployment pipeline
-- **Created:** 2025-10-17
-- **Description:** Create automated CI/CD pipeline for rapid, reliable updates to mobile apps and backend
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-57
-
-### Community & Marketing (6 backlog)
-
-#### EVE-60: Plan post-launch feature iterations based on feedback
-- **Created:** 2025-10-17
-- **Description:** Create systematic process for prioritizing and implementing post-launch features
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-60
 
 #### EVE-56: Implement user feedback collection and analysis system
 - **Created:** 2025-10-17
@@ -364,19 +333,14 @@
 - **Description:** Execute coordinated public launch of EVE Nomad to maximize visibility
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-55
 
-#### EVE-54: Launch website and landing page
-- **Created:** 2025-10-17
-- **Description:** Create professional website and optimized landing page for EVE Nomad
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-54
-
 #### EVE-50: Set up closed beta program
 - **Created:** 2025-10-17
 - **Description:** Launch closed beta program to test EVE Nomad with real users before public release
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-50
 
-### Documentation & Reference
+### Documentation
 
-#### EVE-96: Frontend initialization complete
+#### EVE-96: Frontend initialization complete - EVE Nomad Mobile project ready
 - **Created:** 2025-10-23
 - **Description:** Successfully initialized the EVE Nomad Mobile frontend project with complete development infrastructure
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-96
@@ -386,42 +350,49 @@
 ## 📊 Statistics
 
 ### Overall Progress
-- **Total Issues:** 60
-- **Completed:** 23 issues (38%)
+- **Total Issues:** 55
+- **Completed:** 27 issues (49%)
 - **In Progress:** 3 issues (5%)
-- **Backlog:** 34 issues (57%)
+- **Backlog:** 25 issues (45%)
 
 ### By Project
-- **Foundation & Infrastructure:** 23 issues (16 completed, 7 backlog)
-- **EVE Nomad Mobile:** 31 issues (7 completed, 3 in progress, 21 backlog)
-- **Community & Marketing:** 6 issues (all backlog)
+- **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
+- **EVE Nomad Mobile:** 27 issues (9 completed, 3 in progress, 15 backlog)
+- **Community & Marketing:** 4 issues (all backlog)
 
-### By Priority
-- **Critical:** 2 issues (EVE-97, EVE-71)
-- **High:** Authentication phase (EVE-80, EVE-81, EVE-82)
-- **Medium:** Character management, Skills & Dashboard
-- **Low:** Post-launch features, Community & Marketing
+### By Phase
+- **Phase 1: Foundation** - 75% complete (18/24 issues)
+- **Phase 2: Mobile MVP** - 44% complete (12/27 issues)
+- **Phase 3: Community** - 0% complete (0/4 issues)
 
 ### Recent Velocity
-- **Last 7 days:** 6 issues completed
-- **Last 30 days:** 23 issues completed
-- **Average completion rate:** ~1 issue per day (when actively working)
+- **Last 7 days:** 5 issues completed (EVE-80, 81, 82, 83, 84)
+- **Authentication phase:** Complete (EVE-80 through EVE-84)
+- **Current focus:** Character Management UI (EVE-85, 86, 87)
 
 ---
 
-## 🏷️ Issues by Type
+## 🎯 Current Development Status
 
-### Features (35 issues)
-Foundation, ESI integration, user accounts, mobile app features, paid tier features
+### Active Work
+- **Branch:** `feature/eve-85-to-95-character-and-skills-ui`
+- **PR:** #31 (Draft) - Character & Skills UI with Mock Data
+- **In Progress:** EVE-85, 86, 87 (Character Management)
+- **Timeline:** 15-20 days to shareable screenshots
 
-### Improvements (6 issues)
-EVE-63 (Subagents), EVE-65, EVE-66, EVE-67, EVE-68, EVE-8
+### Recently Completed
+- ✅ Complete authentication system (EVE-80 through EVE-84)
+  - OAuth login with EVE SSO
+  - Registration with validation
+  - Automatic token refresh
+  - Protected route guards
+  - Logout with complete cleanup
 
-### Fixes (4 issues)
-EVE-69, EVE-70, EVE-71, EVE-62, EVE-97
-
-### Setup/Infrastructure (15 issues)
-EVE-7, EVE-9, EVE-10, EVE-11, EVE-12, EVE-13, EVE-14, EVE-18, EVE-38, EVE-64, EVE-72, EVE-73, EVE-74, EVE-75, EVE-76
+### Next Up
+1. **Character Management** (EVE-85 through EVE-89) - UI implementation with mock data
+2. **Skill Queue** (EVE-90, 91) - Display and real-time progress
+3. **Dashboard** (EVE-95) - Widget-based overview screen
+4. **Screenshots** - Capture for r/Eve community post
 
 ---
 
@@ -431,30 +402,12 @@ EVE-7, EVE-9, EVE-10, EVE-11, EVE-12, EVE-13, EVE-14, EVE-18, EVE-38, EVE-64, EV
 - All dates in YYYY-MM-DD format
 - Links point to Linear workspace issues
 - File updated after every work session and status change
-- **Critical issues (EVE-97) should be prioritized before new feature development**
-- Mobile auth flow (EVE-80, 81, 82) marked "In Progress" but may be functionally complete
+- **Authentication system complete** - Ready for feature development
+- **Mock data strategy** - Building UI first, backend integration later
 
 ---
 
-## 🎯 Recommended Next Steps
-
-### Immediate Priority
-1. **EVE-97** - Fix Critical ESI Integration Issues (blocks core backend functionality)
-2. **EVE-71** - Resolve GitHub Actions billing lock (blocks CI/CD)
-3. **Verify EVE-80/81/82** - Confirm mobile auth is complete or needs work
-
-### Short-term (Next Sprint)
-- Complete character management (EVE-85 through EVE-89)
-- Implement skills display (EVE-90, EVE-91, EVE-93)
-- Build dashboard (EVE-95)
-
-### Medium-term (Next Month)
-- Paid tier features (EVE-27, EVE-28, EVE-29, EVE-30)
-- Freemium implementation (EVE-42, EVE-43, EVE-46, EVE-47)
-- Beta program launch (EVE-50)
-
----
-
-**Maintained by:** Claude Code (Autonomous Implementer)
+**Maintained by:** Claude Code
 **Project:** EVE Online Tool
 **Linear Workspace:** https://linear.app/eve-online-tool
+**GitHub Repository:** https://github.com/UlyasPendragon/eve-online-tool
