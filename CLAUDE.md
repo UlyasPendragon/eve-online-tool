@@ -64,9 +64,109 @@ The repository contains comprehensive research and planning documentation. A det
   - Eliminated check-then-update pattern
   - Prevents concurrent OAuth flow failures
   - Idempotent character creation/update
+- ✅ **EVE-64**: GitHub repository setup and version control
+  - Created public repository at https://github.com/UlyasPendragon/eve-online-tool
+  - Comprehensive .gitignore, .gitattributes, LICENSE (MIT)
+  - Branch protection rules on main (PR reviews, status checks required)
+  - Security features enabled (Dependabot, secret scanning, push protection)
+  - GitHub Actions CI/CD pipeline (lint, typecheck, test, security scan)
+  - Complete documentation (README, CONTRIBUTING, PR template)
+  - Linear-GitHub integration with two-way sync
+  - Initial commit (83 files, 27,524 lines) tagged as v0.1.0-alpha
+- ✅ **EVE-74**: Expo Router navigation implementation (Mobile)
+  - File-based routing with Expo Router v6
+  - Root layout with React Query v5 + SafeAreaProvider
+  - Auth flow: login/register screens
+  - Main app: bottom tab navigation (5 tabs)
+  - Dynamic routes for character details
+  - Deep linking configured (eveapp://)
+- ✅ **EVE-75**: EVE-themed UI component library (Mobile)
+  - 7 reusable components (Button, Card, Input, Badge, Text, LoadingSpinner, LoadingSkeleton)
+  - Multiple variants and sizes for each component
+  - EVE Online dark space theme (#0A0E27 background, #1E88E5 primary)
+  - Fully type-safe with TypeScript
+  - Consistent spacing and color system
+- ✅ **EVE-76**: API client configuration (Mobile)
+  - Dynamic environment variable injection via app.config.ts + dotenv
+  - High-level API service functions for all backend endpoints
+  - Backend connectivity verified (health check passed)
+  - Comprehensive .env.example documentation
+- ✅ **EVE-80**: EVE SSO OAuth login flow (Mobile + Backend)
+  - Mobile OAuth service with deep linking (eveapp://auth/callback)
+  - expo-web-browser integration for system browser OAuth
+  - useOAuth hook with React Query for state management
+  - Functional login screen with EVE SSO button
+  - Backend mobile support (mobile=true query parameter, deep link redirect)
+  - PR: https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- ✅ **EVE-81**: Registration screen with email/password (Mobile)
+  - Complete registration form with email, password, confirm password fields
+  - Real-time validation (email format, password 8+ chars, confirmation match)
+  - Visual error feedback with red borders and inline messages
+  - Success alerts with redirect to login
+  - Alternative OAuth signup option
+  - Keyboard-aware scrollable layout
+  - PR: https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- ✅ **EVE-82**: Automatic token refresh mechanism (Mobile + Backend)
+  - Proactive refresh (5-minute buffer before JWT expiry)
+  - Reactive refresh (401 response interceptor)
+  - Request queueing to prevent duplicate refresh calls
+  - Automatic logout navigation on refresh failure
+  - Backend /auth/refresh endpoint (generate new JWT, invalidate old session)
+  - JWT decoding without verification on client
+  - PR: https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- ✅ **EVE-83**: Protected route authentication guard (Mobile)
+  - AuthGuard component for route protection
+  - JWT token validation with expiry checking
+  - Client-side token decoding without verification
+  - Automatic redirect to login with returnUrl preservation
+  - Loading spinner during authentication check
+  - Applied to all protected routes (tabs, character details)
+  - Post-login redirect to intended destination
+- ✅ **EVE-84**: Logout functionality with token cleanup (Mobile)
+  - Complete logout service with backend session invalidation
+  - useLogout hook with React Query cache management
+  - Multi-step cleanup: backend logout → token removal → storage clear → cache clear
+  - Automatic navigation to login screen
+  - Error handling that prioritizes security (logout locally even if backend fails)
+  - Logout button in Characters screen with confirmation dialog
+  - Logout UI accessible via main app navigation
+
+### Known Issues
+- ⚠️ **EVE-70**: TypeScript strict mode errors (65+ errors blocking CI)
+  - Property access errors (TS4111) - ~30 instances requiring bracket notation
+  - Unused parameters (TS6133) - ~10 instances
+  - Read-only property errors (TS2540) - ~15 instances in error classes
+  - Type compatibility issues in token service and route handlers
+  - Estimated effort: ~2-3 hours of mechanical fixes
+- ⚠️ **EVE-71**: GitHub Actions billing lock (account configuration issue)
+  - Public repo Actions showing false billing error despite $0 usage
+  - Not a real billing problem - likely account verification needed
+  - Workaround: Run quality checks locally until resolved
 
 ### Current Development Location
-The backend API is located in `eve-nomad-backend/` directory with full development environment operational.
+- **Backend API**: `eve-nomad-backend/` - Full development environment operational
+- **Mobile App**: `eve-nomad-mobile/` - React Native + Expo project initialized
+
+### Mobile App Status 🚀
+**EVE Nomad Mobile** - Active development in progress:
+- **Platform**: Cross-platform (iOS + Android) using React Native + Expo
+- **Status**: ✅ Authentication system complete, ready for feature implementation
+- **Progress**:
+  - ✅ Expo Router navigation (5-tab main app, auth flow, dynamic routes)
+  - ✅ UI component library (7 EVE-themed components)
+  - ✅ API client configured (environment variables, backend connectivity)
+  - ✅ Complete authentication system (EVE-80 through EVE-84):
+    - OAuth login with EVE SSO via deep linking
+    - Registration screen with email/password
+    - Automatic token refresh (proactive + reactive)
+    - Protected route guards with AuthGuard component
+    - Logout functionality with complete token cleanup
+  - 🔄 Next: Feature implementation (Skills, Wallet, Market, Characters)
+- **CCP Compliance**: ✅ Fully compliant freemium model
+  - Free tier: Full ESI data access (skills, wallet, market orders, character info)
+  - Premium tier ($4.99/month): Backend services (historical storage, advanced notifications, multi-character analytics)
+- **Documentation**: `Docs/Frontend_Development_Plan.md` (comprehensive 500+ line spec)
+- **Linear Project**: [EVE Nomad Mobile App](https://linear.app/eve-online-tool/project/eve-nomad-mobile-app-a643b937ee26)
 
 ## Project Management: Linear MCP Integration
 
@@ -103,10 +203,255 @@ Linear MCP provides AI-native access to Linear's project management capabilities
 - Reference Linear issue IDs in commit messages and pull requests
 - Update issue status as work progresses
 
+### Linear Issue Documentation Standard
+
+When completing Linear issues, **ALWAYS** follow this two-step process:
+
+#### Step 1: Add Completion Comment
+Before marking as Done, add a comprehensive comment with:
+- **Summary**: 1-2 sentence overview of what was accomplished
+- **Files Created**: List with descriptions
+- **Files Modified**: What changed and why
+- **Key Decisions**: Important architectural or technical decisions with rationale
+- **Testing**: Test results and verification steps
+- **Quality Checks**: TypeScript, formatting, linting results
+- **Next Steps**: (Optional) What depends on this work
+
+#### Step 2: Update Issue Description
+- Check off completed task items (turn `- [ ]` into `- [x]`)
+- Add checkmarks to acceptance criteria (✅)
+- Add "Implementation Notes" section if helpful for future reference
+
+**Rationale**: Linear issues serve as permanent documentation of what was built, how it works, and what decisions were made - invaluable for project history and knowledge transfer.
+
 ### Documentation
 
 - Linear MCP Docs: https://linear.app/docs/mcp
 - Linear API: https://developers.linear.app/
+
+## GitHub Workflow (MANDATORY)
+
+All development work MUST follow the GitHub feature branch workflow. Direct commits to `main` are discouraged.
+
+### Workflow Overview
+
+```
+Linear Issue → Feature Branch → Development → Commit → Push → Pull Request → Review → Merge
+```
+
+### Before Starting ANY Issue
+
+**1. Create Feature Branch Immediately**
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/eve-XX-brief-description
+```
+
+**Branch Naming Conventions:**
+- `feature/eve-XX-name` - New features
+- `fix/eve-XX-name` - Bug fixes
+- `refactor/eve-XX-name` - Code refactoring
+- `docs/eve-XX-name` - Documentation updates
+- `test/eve-XX-name` - Test additions/fixes
+
+Always include the Linear issue ID (EVE-XX) in the branch name.
+
+**2. Add to Todo List**
+
+Create a todo list item: "Create and push feature branch for EVE-XX"
+
+### During Development
+
+**3. Commit Frequently**
+
+Commit after each logical unit of work (not just at the end):
+- After implementing a feature component
+- After fixing a bug
+- After writing tests
+- After updating documentation
+
+**4. Use Conventional Commit Messages**
+
+```bash
+git commit -m "EVE-XX: Brief description
+
+Detailed explanation of changes:
+- What was changed
+- Why it was changed
+- How it works
+
+Closes EVE-XX
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+**Commit Message Format:**
+- **Subject**: `EVE-XX: Brief imperative description` (50 chars max)
+- **Body**: Detailed explanation with bullet points
+- **Footer**: `Closes EVE-XX` (triggers Linear-GitHub integration)
+- **Attribution**: Claude Code generation notice
+
+**5. Run Quality Checks Before Each Commit**
+
+```bash
+# Backend
+cd eve-nomad-backend
+pnpm typecheck
+pnpm lint
+pnpm test  # When tests exist
+
+# Mobile
+cd eve-nomad-mobile
+pnpm typecheck
+pnpm format .
+```
+
+### After Completing Issue
+
+**6. Push Feature Branch**
+
+```bash
+git push -u origin feature/eve-XX-description
+```
+
+**7. Create Pull Request**
+
+```bash
+gh pr create --title "EVE-XX: Brief title" --body "$(cat <<'EOF'
+## Summary
+Brief overview of changes
+
+## Issues
+Closes https://linear.app/eve-online-tool/issue/EVE-XX
+
+## Changes
+- List of major changes
+- New files created
+- Modified files
+
+## Testing
+How to test the changes
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
+
+**PR Title Format**: `EVE-XX: Brief description matching issue title`
+
+**8. Update Linear Issue with PR Link**
+
+The Linear-GitHub integration should automatically link the PR, but verify:
+- PR appears in Linear issue activity feed
+- Issue status updated if needed
+
+**9. Update CLAUDE.md**
+
+Add completed work to the "Completed Work" section with:
+- Issue number and title
+- Brief description of implementation
+- Key files modified
+- Links to PR and Linear issue
+
+### Todo List Template for GitHub Workflow
+
+For every Linear issue, add these to your todo list:
+
+```
+- [ ] Create feature branch (feature/eve-XX-description)
+- [ ] Implement changes
+- [ ] Run quality checks (typecheck, lint, format)
+- [ ] Commit changes with Linear issue ID
+- [ ] Push branch to GitHub
+- [ ] Create Pull Request
+- [ ] Update Linear issue with PR link
+- [ ] Update CLAUDE.md with completed work
+```
+
+### Best Practices
+
+✅ **DO:**
+- Create feature branch BEFORE any code changes
+- Commit frequently with clear messages
+- Reference Linear issue ID in ALL commits
+- Run quality checks before pushing
+- Write comprehensive PR descriptions
+- Update Linear and CLAUDE.md after merge
+
+❌ **DON'T:**
+- Commit directly to `main` branch
+- Create PRs with uncommitted EVE-19 work mixed in
+- Skip quality checks (typecheck, lint, format)
+- Use vague commit messages ("fix stuff", "updates")
+- Forget to update Linear or CLAUDE.md
+- Batch multiple unrelated issues in one PR
+
+### Handling Partial/Incomplete Work
+
+If you have uncommitted work for Issue A but need to start Issue B:
+
+**Option 1: Stash** (for very small changes)
+```bash
+git stash push -m "WIP: EVE-A partial work"
+git checkout -b feature/eve-B-description
+# ... work on EVE-B ...
+git checkout feature/eve-A-description
+git stash pop
+```
+
+**Option 2: Commit to Feature Branch** (preferred)
+```bash
+git checkout -b feature/eve-A-description
+git add <files for EVE-A>
+git commit -m "WIP: EVE-A partial implementation (incomplete)"
+git push -u origin feature/eve-A-description
+git checkout main
+git checkout -b feature/eve-B-description
+```
+
+### Linear-GitHub Integration
+
+The repository has Linear-GitHub two-way sync enabled:
+
+**GitHub → Linear:**
+- Commits with `EVE-XX` in message appear in Linear issue activity
+- PR creation/updates appear in Linear
+- PR merge closes Linear issue (if commit has `Closes EVE-XX`)
+
+**Linear → GitHub:**
+- Issue creation includes GitHub issue link
+- Issue updates sync to GitHub (when applicable)
+
+### Repository Configuration
+
+- **Branch Protection**: `main` branch has protection rules
+- **CI/CD**: GitHub Actions run on all PRs (lint, typecheck, test, security scan)
+- **Linear Integration**: Two-way sync active
+- **PR Template**: `.github/pull_request_template.md` provides structure
+
+### Troubleshooting
+
+**Problem**: "CI failing on my PR"
+- **Solution**: Run quality checks locally first, fix errors before pushing
+
+**Problem**: "Linear issue not linked to PR"
+- **Solution**: Ensure commit message includes `Closes EVE-XX` or `Fixes EVE-XX`
+
+**Problem**: "Accidentally committed to main"
+- **Solution**:
+  ```bash
+  git reset --soft HEAD~1  # Undo commit, keep changes
+  git checkout -b feature/eve-XX-description
+  git commit -m "EVE-XX: ..."
+  git push -u origin feature/eve-XX-description
+  ```
+
+**Problem**: "Need to switch issues mid-work"
+- **Solution**: Use Option 2 above (commit WIP to feature branch)
 
 ## Development Roadmap in Linear
 
@@ -310,6 +655,71 @@ pnpm dev                       # Start dev server (hot reload)
   - Push notification systems (Firebase configured)
   - Background job processing (BullMQ ready)
 
+### Mobile Technology Stack (Implemented)
+
+**Framework Decision:** React Native + Expo (validated via EVE-74, EVE-75, EVE-76)
+
+**Current Stack:**
+- **Runtime:** React Native 0.81.5 with TypeScript 5.9.2
+- **Framework:** Expo 54 (managed workflow)
+- **Navigation:** Expo Router 6 (file-based routing)
+- **State Management:** React Query v5 (@tanstack/react-query) + Zustand
+- **HTTP Client:** Axios 1.12.2 with JWT interceptor
+- **Storage:** React Native MMKV 4.0 (encrypted key-value storage)
+- **UI Components:** Custom EVE-themed component library (7 components)
+- **Code Quality:** ESLint 8, Prettier 3, TypeScript strict mode
+
+**Project Structure:**
+```
+eve-nomad-mobile/
+├── app/
+│   ├── _layout.tsx           # Root layout (React Query + SafeArea)
+│   ├── (auth)/
+│   │   ├── _layout.tsx       # Auth flow layout
+│   │   ├── login.tsx         # Login screen
+│   │   └── register.tsx      # Registration screen
+│   ├── (tabs)/
+│   │   ├── _layout.tsx       # Bottom tab navigation (5 tabs)
+│   │   ├── index.tsx         # Dashboard screen
+│   │   ├── skills.tsx        # Skills screen
+│   │   ├── wallet.tsx        # Wallet screen
+│   │   ├── market.tsx        # Market screen
+│   │   └── characters.tsx    # Characters screen
+│   └── character/
+│       └── [id].tsx          # Dynamic character detail route
+├── src/
+│   ├── components/ui/        # UI component library (7 components)
+│   ├── services/
+│   │   ├── api/
+│   │   │   ├── client.ts     # Axios client with JWT auth
+│   │   │   └── index.ts      # API service functions
+│   │   └── storage.ts        # MMKV storage wrapper
+│   ├── types/api.ts          # TypeScript API types
+│   ├── utils/
+│   │   ├── config.ts         # Environment configuration
+│   │   └── theme.ts          # EVE-themed design system
+├── app.config.ts             # Dynamic Expo config (env vars)
+└── package.json
+```
+
+**Environment Configuration:**
+- `.env` file for local development
+- `app.config.ts` injects vars via expo-constants
+- Type-safe access through `src/utils/config.ts`
+
+**Deep Linking:**
+- Scheme: `eveapp://`
+- OAuth callback: `eveapp://auth/callback`
+
+**Development Server:**
+- Expo Dev Server: `pnpm start`
+- iOS Simulator: `pnpm ios`
+- Android Emulator: `pnpm android`
+
+**Detailed Documentation:**
+- Project initialization: Complete (EVE-74, EVE-75, EVE-76)
+- Next steps: React Query hooks (EVE-78), OAuth (EVE-80)
+
 ### UX Philosophy
 - Polished, modern user experience is a premium marketable feature
 - Many existing tools are functionally adequate but have poor UX
@@ -479,41 +889,45 @@ A comprehensive application template has been prepared at `Docs/EVE_Partner_Prog
 ## Next Development Steps
 
 ### Current Status
-Authentication system (EVE-10) and code quality improvements (EVE-65 through EVE-69) are complete. The backend is now production-ready with:
-- ✅ OAuth 2.0 authentication working
-- ✅ Prisma singleton pattern preventing connection issues
-- ✅ Custom domain errors with proper HTTP status codes
-- ✅ Production-grade Pino logging with Sentry integration
-- ✅ Token encryption error handling with startup validation
-- ✅ Race condition fixed with atomic upsert operations
+**Phase 1 Foundation**: Backend infrastructure complete ✅
+- ✅ **EVE-64**: GitHub repository with CI/CD pipeline, branch protection, security features
+- ✅ **EVE-10**: OAuth 2.0 authentication via EVE SSO
+- ✅ **EVE-65 to EVE-69**: Five critical code quality fixes (Prisma singleton, custom errors, logging, error handling, race conditions)
+- ✅ **EVE-11**: Database schema refined with UserSettings and NotificationLog models
+- ✅ **EVE-12**: ESI client library operational
+- ✅ **EVE-13**: ESI data caching implemented (Redis)
+- ✅ **EVE-38**: Background job processing system (BullMQ)
+- ✅ **EVE-18**: Error tracking and logging (Pino + Sentry)
 
-### Priority: Version Control Setup
-Before continuing feature development, establish version control and CI/CD foundation:
+**Phase 2 Mobile MVP**: Foundation complete, feature implementation in progress 🚀
+- ✅ **EVE-74**: Expo Router navigation (file-based routing, 5-tab app)
+- ✅ **EVE-75**: UI component library (7 EVE-themed components)
+- ✅ **EVE-76**: API client configuration (environment variables, backend connectivity)
 
-**Next Task: EVE-64 - Set up GitHub Repository**
-- Create GitHub repository (private initially)
-- Configure .gitignore for Node.js/TypeScript
-- Set up branch protection rules
-- Create PR templates with quality gate checklists
-- Enable Linear issue integration for commit tracking
-- Document branching strategy (GitHub Flow recommended)
+### Active Development: Mobile Feature Implementation
+Current focus on connecting UI to backend APIs:
+- **Next Up**: EVE-78 (React Query hooks for data fetching)
+- **Then**: EVE-80 (EVE SSO OAuth login flow)
+- **Then**: EVE-81 (Login/register screen implementation)
 
-**Why This Is Critical:**
-- Blocks CI/CD pipeline setup (EVE-14)
-- Required for code review and collaboration
-- Enables backup and disaster recovery
-- Allows tracking changes and reverting bugs
-- Foundation for automated testing and deployment
+### Immediate Priorities
 
-### Upcoming Phase 1 Tasks (After Version Control)
-- **EVE-11**: Refine database schema (basic schema exists in `prisma/schema.prisma`)
-- **EVE-12**: Expand ESI client library (base client exists in `src/services/esi-client.ts`)
-- **EVE-13**: Implement ESI data caching layer (Redis configured and ready)
-- **EVE-14**: Set up continuous integration pipeline (requires EVE-64 first)
-- **EVE-19**: Implement user account management system
-- **EVE-36**: Build subscription management and billing system
+**Mobile App (Primary Focus)**:
+1. **EVE-78**: Set up React Query hooks for API data fetching
+2. **EVE-80**: Implement EVE SSO OAuth login flow
+3. **EVE-81**: Build login/register screens with forms
+4. **EVE-82**: Secure JWT token storage (MMKV)
+5. **EVE-83**: Session management and auto-refresh
 
-### Backend Development Workflow
+**Backend (Secondary/As Needed)**:
+1. **EVE-19**: Complete user account management system (email/password auth)
+2. **EVE-70**: Fix TypeScript strict mode errors (65+ errors, blocks CI)
+3. **EVE-71**: Resolve GitHub Actions billing lock
+4. **EVE-36**: Subscription billing system (Stripe integration)
+
+### Development Workflow
+
+**Backend**:
 ```bash
 # Start development environment
 cd eve-nomad-backend
@@ -526,6 +940,20 @@ pnpm format                    # Format code with Prettier
 pnpm typecheck                 # Check TypeScript types
 pnpm prisma studio            # Open database UI
 pnpm prisma migrate dev       # Create new migration
+```
+
+**Mobile**:
+```bash
+# Start development environment
+cd eve-nomad-mobile
+pnpm start                     # Start Expo dev server
+
+# Common commands
+pnpm typecheck                 # Check TypeScript types
+pnpm format                    # Format code with Prettier
+pnpm lint                      # Run ESLint
+pnpm ios                       # Run on iOS simulator
+pnpm android                   # Run on Android emulator
 ```
 
 ## References
