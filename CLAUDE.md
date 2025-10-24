@@ -2,6 +2,66 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+---
+
+## ⚠️ IMPORTANT: Working with Claude Code
+
+### Role Definition
+
+**YOU (User) = Technical Architect**
+- You make ALL major decisions (business, architecture, budget, security)
+- You provide direction and requirements
+- You approve proposals before implementation
+- You complete external tasks (OAuth setup, DNS, deployment)
+- **You do NOT write code**
+
+**CLAUDE CODE (AI) = Autonomous Implementer**
+- I propose technical solutions with trade-offs
+- I implement ALL approved solutions autonomously
+- I handle ALL coding, testing, documentation, and git operations
+- I explain everything transparently
+- **I do NOT make major decisions without your approval**
+
+### Workflow Instructions
+
+**ALL workflow behavior is defined in:** `CLAUDE_CODE_WORKFLOW.md` (v3.2)
+
+This document contains complete instructions for:
+- When to create Linear issues
+- How to document proposals and decisions
+- How to implement autonomously
+- How to handle limitations
+- How to communicate progress
+- How to update Linear and LINEAR_ISSUES.md
+
+**CRITICAL:** Read and follow `CLAUDE_CODE_WORKFLOW.md` for all development work.
+
+### Linear MCP - Primary Documentation
+
+**LINEAR IS THE SOURCE OF TRUTH** for this project.
+
+All work is documented in Linear:
+- Proposals and decisions
+- Implementation details
+- Blockers and resolutions
+- Progress tracking
+
+**I maintain:** `LINEAR_ISSUES.md` (local index of all Linear issues)
+- Auto-updated after every work session
+- Organized by Active, Completed, Blocked
+- Quick reference without searching Linear
+
+**Workflow:**
+1. You provide direction
+2. I create Linear issue with proposal
+3. You approve
+4. I implement and update Linear automatically
+5. I report completion with Linear link
+
+See `CLAUDE_CODE_WORKFLOW.md` for complete details.
+
+---
+
 ## Project Overview
 
 This is an EVE Online third-party tool development project in its early planning stage. The project aims to create a commercial application that serves the EVE Online player community while complying with CCP Games' Developer License Agreement and Third-Party Policies.
@@ -64,6 +124,13 @@ The repository contains comprehensive research and planning documentation. A det
   - Eliminated check-then-update pattern
   - Prevents concurrent OAuth flow failures
   - Idempotent character creation/update
+- ✅ **EVE-97**: Fixed critical ESI integration issues
+  - Made ESIClient.get() public for background job access
+  - Replaced all console.log with Pino structured logging in ESI services
+  - Added missing wallet journal/transactions methods and types
+  - Implemented pagination support with getPaginated<T>() method
+  - Fixed type-unsafe 404 handling to throw RecordNotFoundError
+  - All 5 critical issues tested and production-ready
 
 ### Current Development Location
 The backend API is located in `eve-nomad-backend/` directory with full development environment operational.
@@ -479,13 +546,17 @@ A comprehensive application template has been prepared at `Docs/EVE_Partner_Prog
 ## Next Development Steps
 
 ### Current Status
-Authentication system (EVE-10) and code quality improvements (EVE-65 through EVE-69) are complete. The backend is now production-ready with:
+Authentication system (EVE-10), code quality improvements (EVE-65 through EVE-69), and critical ESI fixes (EVE-97) are complete. The backend is now production-ready with:
 - ✅ OAuth 2.0 authentication working
 - ✅ Prisma singleton pattern preventing connection issues
 - ✅ Custom domain errors with proper HTTP status codes
-- ✅ Production-grade Pino logging with Sentry integration
+- ✅ Production-grade Pino logging with Sentry integration (all ESI services converted)
 - ✅ Token encryption error handling with startup validation
 - ✅ Race condition fixed with atomic upsert operations
+- ✅ ESI client public API for background jobs
+- ✅ Complete wallet API coverage (journal/transactions)
+- ✅ Automatic pagination preventing data loss
+- ✅ Type-safe 404 error handling
 
 ### Priority: Version Control Setup
 Before continuing feature development, establish version control and CI/CD foundation:
@@ -529,6 +600,19 @@ pnpm prisma migrate dev       # Create new migration
 ```
 
 ## References
+
+### Claude Code Workflow (CRITICAL)
+- **Workflow Instructions**: `CLAUDE_CODE_WORKFLOW.md` (v3.2 - Architect Edition with Linear MCP + Adaptive Workflow)
+  - Complete behavior directives for Claude Code
+  - Role definitions (Architect vs Implementer)
+  - Linear MCP integration as primary documentation
+  - Adaptive workflow - use judgment for trivial tasks (with approval)
+  - When to create issues, how to propose, how to implement
+  - Communication protocols and reporting formats
+- **Linear Issues Index**: `LINEAR_ISSUES.md` (auto-maintained)
+  - Local index of all Linear issues
+  - Quick reference without searching Linear
+  - Organized by Active, Completed, Blocked
 
 ### Project Documentation
 - Research document: `Docs/idea research.md`
