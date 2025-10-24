@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import * as redis from './redis.service';
 import crypto from 'crypto';
+import { createLogger } from './logger.service';
+
+const logger = createLogger({ service: 'CacheService' });
 
 /**
  * Cache Service
@@ -58,7 +61,7 @@ export async function get(cacheKey: string): Promise<CacheEntry | null> {
 
         // Check if expired
         if (new Date(entry.expiresAt) > new Date()) {
-          console.info(`[Cache] Redis HIT: ${cacheKey}`);
+          logger.info('Cache hit (Redis)', { cacheKey });
           return {
             ...entry,
             expiresAt: new Date(entry.expiresAt), // Parse date string
@@ -66,11 +69,11 @@ export async function get(cacheKey: string): Promise<CacheEntry | null> {
         } else {
           // Expired, delete from Redis
           await redis.del(cacheKey);
-          console.info(`[Cache] Redis EXPIRED: ${cacheKey}`);
+          logger.info('Cache expired (Redis)', { cacheKey });
         }
       }
     } catch (error) {
-      console.error(`[Cache] Redis get error for ${cacheKey}:`, error);
+      logger.error('Redis cache get error', error as Error, { cacheKey });
       // Fall through to database
     }
   }
@@ -84,7 +87,7 @@ export async function get(cacheKey: string): Promise<CacheEntry | null> {
     if (cached) {
       // Check if expired
       if (cached.expiresAt > new Date()) {
-        console.info(`[Cache] Database HIT: ${cacheKey}`);
+        logger.info('Cache hit (Database)', { cacheKey });
 
         // Warm Redis cache
         if (redis.isConnected()) {
@@ -110,14 +113,14 @@ export async function get(cacheKey: string): Promise<CacheEntry | null> {
       } else {
         // Expired, delete from database
         await prisma.cachedData.delete({ where: { cacheKey } });
-        console.info(`[Cache] Database EXPIRED: ${cacheKey}`);
+        logger.info('Cache expired (Database)', { cacheKey });
       }
     }
   } catch (error) {
-    console.error(`[Cache] Database get error for ${cacheKey}:`, error);
+    logger.error('Database cache get error', error as Error, { cacheKey });
   }
 
-  console.info(`[Cache] MISS: ${cacheKey}`);
+  logger.info('Cache miss', { cacheKey });
   return null;
 }
 
@@ -140,7 +143,7 @@ export async function set(
 
   // Don't cache if already expired
   if (ttl <= 0) {
-    console.warn(`[Cache] Skipping cache for ${cacheKey} (already expired)`);
+    logger.warn('Skipping cache for already expired entry', { cacheKey });
     return;
   }
 
@@ -148,9 +151,9 @@ export async function set(
   if (redis.isConnected()) {
     try {
       await redis.set(cacheKey, JSON.stringify(entry), ttl);
-      console.info(`[Cache] Redis SET: ${cacheKey} (TTL: ${ttl}s)`);
+      logger.info('Cache set (Redis)', { cacheKey, ttl });
     } catch (error) {
-      console.error(`[Cache] Redis set error for ${cacheKey}:`, error);
+      logger.error('Redis cache set error', error as Error, { cacheKey });
     }
   }
 
@@ -168,9 +171,9 @@ export async function set(
         expiresAt,
       },
     });
-    console.info(`[Cache] Database SET: ${cacheKey}`);
+    logger.info('Cache set (Database)', { cacheKey });
   } catch (error) {
-    console.error(`[Cache] Database set error for ${cacheKey}:`, error);
+    logger.error('Database cache set error', error as Error, { cacheKey });
   }
 }
 
@@ -182,9 +185,9 @@ export async function del(cacheKey: string): Promise<void> {
   if (redis.isConnected()) {
     try {
       await redis.del(cacheKey);
-      console.info(`[Cache] Redis DELETE: ${cacheKey}`);
+      logger.info('Cache delete (Redis)', { cacheKey });
     } catch (error) {
-      console.error(`[Cache] Redis delete error for ${cacheKey}:`, error);
+      logger.error('Redis cache delete error', error as Error, { cacheKey });
     }
   }
 
@@ -193,9 +196,9 @@ export async function del(cacheKey: string): Promise<void> {
     await prisma.cachedData.deleteMany({
       where: { cacheKey },
     });
-    console.info(`[Cache] Database DELETE: ${cacheKey}`);
+    logger.info('Cache delete (Database)', { cacheKey });
   } catch (error) {
-    console.error(`[Cache] Database delete error for ${cacheKey}:`, error);
+    logger.error('Database cache delete error', error as Error, { cacheKey });
   }
 }
 
@@ -207,9 +210,9 @@ export async function deletePattern(pattern: string): Promise<void> {
   if (redis.isConnected()) {
     try {
       const deleted = await redis.deletePattern(pattern);
-      console.info(`[Cache] Redis DELETE PATTERN: ${pattern} (${deleted} keys)`);
+      logger.info('Cache delete pattern (Redis)', { pattern, deleted });
     } catch (error) {
-      console.error(`[Cache] Redis delete pattern error for ${pattern}:`, error);
+      logger.error('Redis cache delete pattern error', error as Error, { pattern });
     }
   }
 
@@ -223,9 +226,9 @@ export async function deletePattern(pattern: string): Promise<void> {
         },
       },
     });
-    console.info(`[Cache] Database DELETE PATTERN: ${pattern} (${deleted.count} entries)`);
+    logger.info('Cache delete pattern (Database)', { pattern, count: deleted.count });
   } catch (error) {
-    console.error(`[Cache] Database delete pattern error for ${pattern}:`, error);
+    logger.error('Database cache delete pattern error', error as Error, { pattern });
   }
 }
 
@@ -286,10 +289,10 @@ export async function cleanupExpired(): Promise<number> {
       },
     });
 
-    console.info(`[Cache] Cleaned up ${deleted.count} expired entries`);
+    logger.info('Cache cleanup completed', { deletedCount: deleted.count });
     return deleted.count;
   } catch (error) {
-    console.error('[Cache] Cleanup error:', error);
+    logger.error('Cache cleanup error', error as Error);
     return 0;
   }
 }

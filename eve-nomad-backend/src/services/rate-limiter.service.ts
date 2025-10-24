@@ -1,5 +1,8 @@
 // @ts-nocheck - ESI rate limiting needs type refactoring
 import * as redis from './redis.service';
+import { createLogger } from './logger.service';
+
+const logger = createLogger({ service: 'RateLimiter' });
 
 /**
  * Rate Limiter Service
@@ -56,7 +59,7 @@ export function trackErrorLimit(headers: Record<string, string | string[]>): voi
 
   // Warn if approaching limit
   if (errorsRemaining <= ERROR_LIMIT_THRESHOLD) {
-    console.warn(`[RateLimit] Approaching error limit: ${errorsRemaining} errors remaining`);
+    logger.warn('Approaching ESI error limit', { errorsRemaining });
   }
 }
 
@@ -110,9 +113,11 @@ export function trackRateLimit(headers: Record<string, string | string[]>): void
   // Warn if approaching limit (80% of tokens used)
   const threshold = totalTokens * 0.2; // 20% remaining = 80% used
   if (tokensRemaining <= threshold) {
-    console.warn(
-      `[RateLimit] Approaching rate limit for ${groupStr}: ${tokensRemaining}/${totalTokens} tokens remaining`,
-    );
+    logger.warn('Approaching ESI rate limit', {
+      group: groupStr,
+      tokensRemaining,
+      totalTokens,
+    });
   }
 }
 
@@ -157,7 +162,7 @@ export async function shouldThrottleErrors(): Promise<{
 
     return { shouldWait: false, waitSeconds: 0 };
   } catch (error) {
-    console.error('[RateLimit] Error checking error limit:', error);
+    logger.error('Error checking ESI error limit', error as Error);
     return { shouldWait: false, waitSeconds: 0 };
   }
 }
@@ -194,7 +199,7 @@ export async function shouldThrottleRate(routeGroup?: string): Promise<{
 
     return { shouldWait: false, waitSeconds: 0 };
   } catch (error) {
-    console.error('[RateLimit] Error checking rate limit:', error);
+    logger.error('Error checking ESI rate limit', error as Error);
     return { shouldWait: false, waitSeconds: 0 };
   }
 }
@@ -207,7 +212,7 @@ export async function waitForReset(seconds: number, reason?: string): Promise<vo
     return;
   }
 
-  console.warn(`[RateLimit] Waiting ${seconds}s due to: ${reason || 'rate limit'}`);
+  logger.warn('Rate limit wait initiated', { seconds, reason: reason || 'rate limit' });
 
   return new Promise((resolve) => {
     setTimeout(resolve, seconds * 1000);

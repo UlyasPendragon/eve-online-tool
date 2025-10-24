@@ -3,7 +3,11 @@ import * as cache from './cache.service';
 import * as rateLimit from './rate-limiter.service';
 import * as authService from './auth.service';
 import { retry } from '../utils/retry.util';
+import { createLogger } from './logger.service';
+import { RecordNotFoundError } from '../types/errors';
 import type * as ESI from '../types/esi';
+
+const logger = createLogger({ service: 'ESIClient' });
 
 /**
  * Enhanced ESI Client
@@ -39,7 +43,7 @@ export class ESIClient {
         await rateLimit.waitForReset(errorThrottle.waitSeconds, errorThrottle.reason);
       }
 
-      console.info(`[ESI] ${config.method?.toUpperCase()} ${config.url}`);
+      logger.info('ESI request', { method: config.method?.toUpperCase(), url: config.url });
       return config;
     });
 
@@ -48,15 +52,17 @@ export class ESIClient {
       rateLimit.trackRateLimit(response.headers as Record<string, string | string[]>);
 
       const errorLimit = response.headers['x-esi-error-limit-remain'];
-      console.info(
-        `[ESI] ${response.status} ${response.config.url} (Errors: ${errorLimit || 'N/A'})`,
-      );
+      logger.info('ESI response', {
+        status: response.status,
+        url: response.config.url,
+        errorLimit: errorLimit || 'N/A',
+      });
 
       return response;
     });
   }
 
-  private async get<T>(
+  public async get<T>(
     endpoint: string,
     options?: {
       params?: Record<string, unknown>;
@@ -80,7 +86,9 @@ export class ESIClient {
         const result = await authService.getCharacterWithValidToken(options.characterId);
         accessToken = result.accessToken;
       } catch (error) {
-        console.error(`[ESI] Failed to get token for character ${options.characterId}:`, error);
+        logger.error('Failed to get token for character', error as Error, {
+          characterId: options.characterId,
+        });
         throw new Error('REAUTH_REQUIRED');
       }
     }
@@ -104,9 +112,12 @@ export class ESIClient {
       },
       {
         onRetry: (attempt, error, delayMs) => {
-          console.warn(
-            `[ESI] Retry attempt ${attempt} for ${endpoint} after ${delayMs}ms: ${error.message}`,
-          );
+          logger.warn('ESI retry attempt', {
+            attempt,
+            endpoint,
+            delayMs,
+            error: error.message,
+          });
         },
       },
     );
@@ -138,7 +149,7 @@ export class ESIClient {
     }
 
     if (status === 404) {
-      return null as T;
+      throw new RecordNotFoundError('ESI Resource', response.config.url || 'unknown');
     }
 
     if (status === 420) {
@@ -235,6 +246,89 @@ export class ESIClient {
     return this.get<ESI.PlanetaryColony[]>(`/latest/characters/${characterId}/planets/`, {
       characterId,
     });
+  }
+
+  async getCharacterWalletJournal(characterId: number): Promise<ESI.WalletJournalEntry[]> {
+    return this.get<ESI.WalletJournalEntry[]>(
+      `/latest/characters/${characterId}/wallet/journal/`,
+      { characterId },
+    );
+  }
+
+  async getCharacterWalletTransactions(
+    characterId: number,
+  ): Promise<ESI.WalletTransaction[]> {
+    return this.get<ESI.WalletTransaction[]>(
+      `/latest/characters/${characterId}/wallet/transactions/`,
+      { characterId },
+    );
+  }
+
+  // ===== PAGINATION SUPPORT =====
+
+  /**
+   * Get all pages for a paginated ESI endpoint
+   * @param endpoint The ESI endpoint URL
+   * @param options Request options including characterId for auth
+   * @returns Array of all items from all pages
+   */
+  public async getPaginated<T>(
+    endpoint: string,
+    options?: {
+      params?: Record<string, unknown>;
+      characterId?: number;
+      skipCache?: boolean;
+      maxPages?: number;
+    },
+  ): Promise<T[]> {
+    const allResults: T[] = [];
+    let currentPage = 1;
+    const maxPages = options?.maxPages || 100; // Safety limit
+
+    while (currentPage <= maxPages) {
+      const pageParams = { ...options?.params, page: currentPage };
+
+      try {
+        const response = await this.client.get(endpoint, {
+          params: pageParams,
+          headers: options?.characterId
+            ? {
+                Authorization: `Bearer ${(await authService.getCharacterWithValidToken(options.characterId)).accessToken}`,
+              }
+            : {},
+        });
+
+        if (response.status !== 200) {
+          break;
+        }
+
+        const pageData = response.data as T[];
+        if (!Array.isArray(pageData) || pageData.length === 0) {
+          break;
+        }
+
+        allResults.push(...pageData);
+
+        // Check X-Pages header to see total pages
+        const totalPages = parseInt(response.headers['x-pages'] || '1', 10);
+        if (currentPage >= totalPages) {
+          break;
+        }
+
+        currentPage++;
+      } catch (error) {
+        logger.error('Pagination error', error as Error, { endpoint, currentPage });
+        break;
+      }
+    }
+
+    logger.info('Paginated request completed', {
+      endpoint,
+      totalPages: currentPage - 1,
+      totalResults: allResults.length,
+    });
+
+    return allResults;
   }
 
   // ===== CACHE MANAGEMENT =====
