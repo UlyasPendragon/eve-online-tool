@@ -1,28 +1,31 @@
 /**
- * Character Detail Screen - EVE Nomad Mobile
+ * Character Detail Screen - EVE Nomad Mobile (Protected)
  */
 
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { colors, typography, spacing } from '../../src/utils/theme';
+import { AuthGuard } from '../../src/components';
 
 export default function CharacterDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
-      <View style={styles.content}>
-        <View style={styles.placeholder}>
-          <Text style={styles.title}>Character Detail</Text>
-          <Text style={styles.characterId}>Character ID: {id}</Text>
-          <Text style={styles.description}>
-            View detailed information about this EVE Online character.
-          </Text>
-          <Text style={styles.comingSoon}>Coming Soon</Text>
+    <AuthGuard>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
+        <View style={styles.content}>
+          <View style={styles.placeholder}>
+            <Text style={styles.title}>Character Detail</Text>
+            <Text style={styles.characterId}>Character ID: {id}</Text>
+            <Text style={styles.description}>
+              View detailed information about this EVE Online character.
+            </Text>
+            <Text style={styles.comingSoon}>Coming Soon</Text>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AuthGuard>
   );
 }
 

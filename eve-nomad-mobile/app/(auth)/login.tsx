@@ -4,12 +4,13 @@
 
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useOAuth } from '../../src/hooks/queries';
 import { colors, typography, spacing } from '../../src/utils/theme';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { returnUrl } = useLocalSearchParams<{ returnUrl?: string }>();
   const { login, isLoading, error, clearError } = useOAuth();
 
   const handleLogin = async () => {
@@ -17,10 +18,13 @@ export default function LoginScreen() {
     await login();
 
     // Check if we have a token now (login was successful)
-    // Navigation will be handled by root layout checking auth state
-    // For now, just show success or error
     if (!error && !isLoading) {
-      router.replace('/(tabs)');
+      // Navigate to return URL if provided, otherwise go to dashboard
+      if (returnUrl) {
+        router.replace(returnUrl);
+      } else {
+        router.replace('/(tabs)');
+      }
     }
   };
 

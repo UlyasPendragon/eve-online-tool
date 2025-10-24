@@ -114,6 +114,22 @@ The repository contains comprehensive research and planning documentation. A det
   - Backend /auth/refresh endpoint (generate new JWT, invalidate old session)
   - JWT decoding without verification on client
   - PR: https://github.com/UlyasPendragon/eve-online-tool/pull/28
+- ✅ **EVE-83**: Protected route authentication guard (Mobile)
+  - AuthGuard component for route protection
+  - JWT token validation with expiry checking
+  - Client-side token decoding without verification
+  - Automatic redirect to login with returnUrl preservation
+  - Loading spinner during authentication check
+  - Applied to all protected routes (tabs, character details)
+  - Post-login redirect to intended destination
+- ✅ **EVE-84**: Logout functionality with token cleanup (Mobile)
+  - Complete logout service with backend session invalidation
+  - useLogout hook with React Query cache management
+  - Multi-step cleanup: backend logout → token removal → storage clear → cache clear
+  - Automatic navigation to login screen
+  - Error handling that prioritizes security (logout locally even if backend fails)
+  - Logout button in Characters screen with confirmation dialog
+  - Logout UI accessible via main app navigation
 
 ### Known Issues
 - ⚠️ **EVE-70**: TypeScript strict mode errors (65+ errors blocking CI)
@@ -134,12 +150,18 @@ The repository contains comprehensive research and planning documentation. A det
 ### Mobile App Status 🚀
 **EVE Nomad Mobile** - Active development in progress:
 - **Platform**: Cross-platform (iOS + Android) using React Native + Expo
-- **Status**: ✅ Foundation complete, ready for feature implementation
+- **Status**: ✅ Authentication system complete, ready for feature implementation
 - **Progress**:
   - ✅ Expo Router navigation (5-tab main app, auth flow, dynamic routes)
   - ✅ UI component library (7 EVE-themed components)
   - ✅ API client configured (environment variables, backend connectivity)
-  - 🔄 Next: React Query hooks (EVE-78), OAuth login (EVE-80)
+  - ✅ Complete authentication system (EVE-80 through EVE-84):
+    - OAuth login with EVE SSO via deep linking
+    - Registration screen with email/password
+    - Automatic token refresh (proactive + reactive)
+    - Protected route guards with AuthGuard component
+    - Logout functionality with complete token cleanup
+  - 🔄 Next: Feature implementation (Skills, Wallet, Market, Characters)
 - **CCP Compliance**: ✅ Fully compliant freemium model
   - Free tier: Full ESI data access (skills, wallet, market orders, character info)
   - Premium tier ($4.99/month): Backend services (historical storage, advanced notifications, multi-character analytics)

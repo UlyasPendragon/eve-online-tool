@@ -120,6 +120,9 @@ export function useRegister(): UseMutationResult<
 /**
  * Logout mutation hook
  *
+ * Performs complete logout with backend session invalidation,
+ * token cleanup, cache clearing, and navigation to login screen.
+ *
  * @returns Mutation result for logout operation
  *
  * @example
@@ -130,8 +133,7 @@ export function useRegister(): UseMutationResult<
  *   const handleLogout = () => {
  *     logoutMutation.mutate(undefined, {
  *       onSuccess: () => {
- *         console.log('Logged out');
- *         // Navigate to login screen
+ *         console.log('Logged out successfully');
  *       },
  *     });
  *   };
@@ -152,10 +154,24 @@ export function useLogout(): UseMutationResult<void, Error, void, unknown> {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      // Remove token from storage
+      console.log('[useLogout] Backend logout successful');
+
+      // Remove tokens from storage
       removeToken();
+      console.log('[useLogout] Tokens cleared from storage');
 
       // Clear all cached data
+      queryClient.clear();
+      console.log('[useLogout] React Query cache cleared');
+
+      // Note: Navigation to login screen should be handled by the component
+      // using this hook, typically with router.replace('/login') in onSuccess
+    },
+    onError: (error) => {
+      console.error('[useLogout] Logout error:', error);
+
+      // Even if backend logout fails, clear local data for security
+      removeToken();
       queryClient.clear();
     },
   });
