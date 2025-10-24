@@ -1,45 +1,12 @@
 # Linear Issues Index
 
 **Last Updated:** 2025-10-24 (Auto-maintained by Claude Code)
-**Total Issues:** 55 (3 In Progress, 27 Completed, 25 Backlog)
+**Total Issues:** 55 (0 In Progress, 27 Completed, 28 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
 **Linear Workspace:** https://linear.app/eve-online-tool
 **GitHub Repository:** https://github.com/UlyasPendragon/eve-online-tool
-
----
-
-## 🚧 In Progress (3 issues)
-
-### Mobile Frontend - Character Management
-
-#### EVE-85: Fetch and display character list
-- **Status:** In Progress
-- **Project:** EVE Nomad - Mobile Companion App
-- **Assignee:** Curtis Reker
-- **Created:** 2025-10-23
-- **Description:** Create API wrapper and UI for displaying user's characters with mock data strategy for rapid UI development
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-85
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/31
-
-#### EVE-86: Implement character switcher functionality
-- **Status:** In Progress
-- **Project:** EVE Nomad - Mobile Companion App
-- **Assignee:** Curtis Reker
-- **Created:** 2025-10-23
-- **Description:** Build character switcher component for multi-character support. Store active character in Zustand, persist with MMKV
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-86
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/31
-
-#### EVE-87: Create character detail view
-- **Status:** In Progress
-- **Project:** EVE Nomad - Mobile Companion App
-- **Assignee:** Curtis Reker
-- **Created:** 2025-10-23
-- **Description:** Build character detail screen with comprehensive profile, stats, and associated data (wallet, skills, market orders)
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-87
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/31
 
 ---
 
@@ -254,7 +221,22 @@ This document provides a quick reference index of all Linear issues for the EVE 
 - **Description:** Set up code quality tooling for consistent formatting and type safety
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-73
 
-### Mobile App - Character Management (2 backlog)
+### Mobile App - Character Management (5 backlog)
+
+#### EVE-85: Fetch and display character list
+- **Created:** 2025-10-23
+- **Description:** Create API wrapper and UI for displaying user's characters with mock data strategy for rapid UI development
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-85
+
+#### EVE-86: Implement character switcher functionality
+- **Created:** 2025-10-23
+- **Description:** Build character switcher component for multi-character support. Store active character in Zustand, persist with MMKV
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-86
+
+#### EVE-87: Create character detail view
+- **Created:** 2025-10-23
+- **Description:** Build character detail screen with comprehensive profile, stats, and associated data (wallet, skills, market orders)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-87
 
 #### EVE-89: Implement remove character functionality
 - **Created:** 2025-10-23
@@ -352,47 +334,51 @@ This document provides a quick reference index of all Linear issues for the EVE 
 ### Overall Progress
 - **Total Issues:** 55
 - **Completed:** 27 issues (49%)
-- **In Progress:** 3 issues (5%)
-- **Backlog:** 25 issues (45%)
+- **In Progress:** 0 issues (0%)
+- **Backlog:** 28 issues (51%)
 
 ### By Project
 - **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
-- **EVE Nomad Mobile:** 27 issues (9 completed, 3 in progress, 15 backlog)
+- **EVE Nomad Mobile:** 27 issues (9 completed, 0 in progress, 18 backlog)
 - **Community & Marketing:** 4 issues (all backlog)
 
 ### By Phase
 - **Phase 1: Foundation** - 75% complete (18/24 issues)
-- **Phase 2: Mobile MVP** - 44% complete (12/27 issues)
+- **Phase 2: Mobile MVP** - 33% complete (9/27 issues)
 - **Phase 3: Community** - 0% complete (0/4 issues)
 
 ### Recent Velocity
 - **Last 7 days:** 5 issues completed (EVE-80, 81, 82, 83, 84)
 - **Authentication phase:** Complete (EVE-80 through EVE-84)
-- **Current focus:** Character Management UI (EVE-85, 86, 87)
+- **Current focus:** Awaiting direction (documentation merged, feature work pending)
 
 ---
 
 ## 🎯 Current Development Status
 
 ### Active Work
-- **Branch:** `feature/eve-85-to-95-character-and-skills-ui`
-- **PR:** #31 (Draft) - Character & Skills UI with Mock Data
-- **In Progress:** EVE-85, 86, 87 (Character Management)
-- **Timeline:** 15-20 days to shareable screenshots
+- **Status:** 🟢 Ready for next feature
+- **Branch:** `main` (clean, all docs merged)
+- **Last PR:** #31 (Merged) - Documentation: LINEAR_ISSUES.md + Claude Code Workflow
 
 ### Recently Completed
-- ✅ Complete authentication system (EVE-80 through EVE-84)
+- ✅ **Documentation Infrastructure** (PR #31, Oct 24)
+  - LINEAR_ISSUES.md issue index
+  - CLAUDE_CODE_WORKFLOW.md workflow guidelines
+
+- ✅ **Complete authentication system** (EVE-80 through EVE-84)
   - OAuth login with EVE SSO
   - Registration with validation
   - Automatic token refresh
   - Protected route guards
   - Logout with complete cleanup
 
-### Next Up
+### Next Up (Awaiting Direction)
+Options for next development phase:
 1. **Character Management** (EVE-85 through EVE-89) - UI implementation with mock data
 2. **Skill Queue** (EVE-90, 91) - Display and real-time progress
 3. **Dashboard** (EVE-95) - Widget-based overview screen
-4. **Screenshots** - Capture for r/Eve community post
+4. **Other priorities** - Backend features, infrastructure, etc.
 
 ---
 
