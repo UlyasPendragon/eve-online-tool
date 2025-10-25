@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useRouter, useSegments } from 'expo-router';
+import { Redirect, useSegments, useRootNavigationState } from 'expo-router';
 import { getToken } from '../services/storage';
 import { LoadingSpinner } from './ui/LoadingSpinner';
 
@@ -58,10 +58,11 @@ const isTokenExpired = (token: string): boolean => {
  * AuthGuard Component
  *
  * Wraps protected routes and enforces authentication.
+ * - Waits for Expo Router to be fully mounted before navigation
  * - Checks for valid JWT token
- * - Redirects to login if not authenticated
+ * - Uses declarative <Redirect /> component for reliable navigation
  * - Preserves intended destination for post-login redirect
- * - Shows loading state during auth check
+ * - Shows loading state during router initialization and auth check
  *
  * @example
  * ```tsx
@@ -73,16 +74,30 @@ const isTokenExpired = (token: string): boolean => {
  *   );
  * }
  * ```
+ *
+ * @see https://linear.app/eve-online-tool/issue/EVE-98 - Router mount timing fix
+ *
+ * Technical Implementation:
+ * - Uses useRootNavigationState to wait for router readiness
+ * - Uses declarative <Redirect /> instead of imperative router.replace()
+ * - Prevents "navigate before mount" errors by letting React handle timing
  */
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const [isChecking, setIsChecking] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const router = useRouter();
   const segments = useSegments();
+  const rootNavigationState = useRootNavigationState();
 
   useEffect(() => {
+    // Wait for router to be fully mounted before checking authentication
+    if (!rootNavigationState?.key) {
+      console.log('[AuthGuard] Router not ready, waiting...');
+      return;
+    }
+
+    console.log('[AuthGuard] Router ready, checking authentication');
     checkAuthentication();
-  }, []);
+  }, [rootNavigationState?.key]);
 
   const checkAuthentication = async () => {
     try {
@@ -90,19 +105,17 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       const token = getToken();
 
       if (!token) {
-        console.log('[AuthGuard] No token found, redirecting to login');
+        console.log('[AuthGuard] No token found, will redirect to login');
         setIsAuthenticated(false);
         setIsChecking(false);
-        redirectToLogin();
         return;
       }
 
       // Check if token is expired
       if (isTokenExpired(token)) {
-        console.log('[AuthGuard] Token expired, redirecting to login');
+        console.log('[AuthGuard] Token expired, will redirect to login');
         setIsAuthenticated(false);
         setIsChecking(false);
-        redirectToLogin();
         return;
       }
 
@@ -114,32 +127,17 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       console.error('[AuthGuard] Error checking authentication:', error);
       setIsAuthenticated(false);
       setIsChecking(false);
-      redirectToLogin();
     }
   };
 
-  /**
-   * Redirect to login screen with return URL preserved
-   */
-  const redirectToLogin = () => {
-    // Get current route path to preserve as returnUrl
-    const currentPath = segments.join('/');
-
-    // Don't save auth routes as return URLs
-    const isAuthRoute =
-      segments[0] === '(auth)' || segments.includes('login') || segments.includes('register');
-
-    if (!isAuthRoute && currentPath) {
-      // Navigate to login with return URL
-      router.replace({
-        pathname: '/login',
-        params: { returnUrl: `/${currentPath}` },
-      });
-    } else {
-      // Just go to login without return URL
-      router.replace('/login');
-    }
-  };
+  // Show loading spinner while router is initializing
+  if (!rootNavigationState?.key) {
+    return (
+      <View style={styles.loadingContainer}>
+        <LoadingSpinner size="large" color="#1E88E5" />
+      </View>
+    );
+  }
 
   // Show loading spinner while checking authentication
   if (isChecking) {
@@ -150,9 +148,19 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     );
   }
 
-  // If not authenticated after checking, return null (redirect handles navigation)
+  // If not authenticated after checking, redirect to login using declarative component
   if (!isAuthenticated) {
-    return null;
+    const currentPath = segments.join('/');
+    const isAuthRoute =
+      segments[0] === '(auth)' || segments.includes('login') || segments.includes('register');
+
+    // Preserve return URL for non-auth routes
+    if (!isAuthRoute && currentPath) {
+      return <Redirect href={`/login?returnUrl=/${currentPath}`} />;
+    }
+
+    // Simple redirect for auth routes or empty paths
+    return <Redirect href="/login" />;
   }
 
   // Render protected content
