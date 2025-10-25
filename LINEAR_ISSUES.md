@@ -1,7 +1,7 @@
 # Linear Issues Index
 
 **Last Updated:** 2025-10-24 (Auto-maintained by Claude Code)
-**Total Issues:** 55 (0 In Progress, 27 Completed, 28 Backlog)
+**Total Issues:** 56 (0 In Progress, 28 Completed, 28 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
@@ -10,7 +10,7 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ---
 
-## ✅ Completed Issues (27 issues)
+## ✅ Completed Issues (28 issues)
 
 ### Foundation & Infrastructure (18 completed)
 
@@ -110,7 +110,14 @@ This document provides a quick reference index of all Linear issues for the EVE 
 - **Description:** Reviewed and documented CCP's Developer License Agreement requirements
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-7
 
-### Mobile App - EVE Nomad (9 completed)
+### Mobile App - EVE Nomad (10 completed)
+
+#### EVE-98: Bug: AuthGuard navigation error before router mount
+- **Completed:** 2025-10-24
+- **Priority:** Critical
+- **Description:** Fixed "Attempted to navigate before mounting the Root Layout component" error by replacing imperative router.replace() with declarative <Redirect /> component
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-98
+- **Branch:** fix/eve-98-authguard-navigation-error
 
 #### EVE-84: Implement logout functionality with token cleanup (Mobile)
 - **Completed:** 2025-10-24
@@ -332,25 +339,26 @@ This document provides a quick reference index of all Linear issues for the EVE 
 ## 📊 Statistics
 
 ### Overall Progress
-- **Total Issues:** 55
-- **Completed:** 27 issues (49%)
+- **Total Issues:** 56
+- **Completed:** 28 issues (50%)
 - **In Progress:** 0 issues (0%)
-- **Backlog:** 28 issues (51%)
+- **Backlog:** 28 issues (50%)
 
 ### By Project
 - **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
-- **EVE Nomad Mobile:** 27 issues (9 completed, 0 in progress, 18 backlog)
+- **EVE Nomad Mobile:** 28 issues (10 completed, 0 in progress, 18 backlog)
 - **Community & Marketing:** 4 issues (all backlog)
 
 ### By Phase
 - **Phase 1: Foundation** - 75% complete (18/24 issues)
-- **Phase 2: Mobile MVP** - 33% complete (9/27 issues)
+- **Phase 2: Mobile MVP** - 36% complete (10/28 issues)
 - **Phase 3: Community** - 0% complete (0/4 issues)
 
 ### Recent Velocity
-- **Last 7 days:** 5 issues completed (EVE-80, 81, 82, 83, 84)
+- **Last 7 days:** 6 issues completed (EVE-80, 81, 82, 83, 84, 98)
 - **Authentication phase:** Complete (EVE-80 through EVE-84)
-- **Current focus:** Awaiting direction (documentation merged, feature work pending)
+- **Bug fixes:** EVE-98 (AuthGuard navigation error) resolved
+- **Current focus:** Ready for feature implementation (core auth system stable)
 
 ---
 
