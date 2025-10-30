@@ -5,54 +5,17 @@
  * Redirects to login screen if not authenticated or token is expired.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 import { getToken } from '../services/storage';
 import { LoadingSpinner } from './ui/LoadingSpinner';
+import { useAuthStore } from '../stores';
+import { decodeJWT, isTokenExpired, getUserIdFromToken } from '../utils/jwt';
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
-
-/**
- * Decode JWT token without verification
- * Returns null if token is invalid
- */
-const decodeToken = (token: string): { exp: number; userId: number } | null => {
-  try {
-    const base64Url = token.split('.')[1];
-    if (!base64Url) return null;
-
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(''),
-    );
-
-    return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error('[AuthGuard] Failed to decode token:', error);
-    return null;
-  }
-};
-
-/**
- * Check if token is expired
- */
-const isTokenExpired = (token: string): boolean => {
-  const decoded = decodeToken(token);
-  if (!decoded || !decoded.exp) {
-    return true; // Consider invalid token as expired
-  }
-
-  const expiryTime = decoded.exp * 1000; // Convert to milliseconds
-  const now = Date.now();
-
-  return now >= expiryTime;
-};
 
 /**
  * AuthGuard Component
@@ -76,67 +39,95 @@ const isTokenExpired = (token: string): boolean => {
  */
 export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const [isChecking, setIsChecking] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const segments = useSegments();
+  const { isAuthenticated, login } = useAuthStore();
 
-  useEffect(() => {
-    checkAuthentication();
-  }, []);
-
-  const checkAuthentication = async () => {
+  // Check authentication on mount and initialize store from storage
+  const checkAuthentication = useCallback(async () => {
     try {
-      // Get current token
+      // If store is already populated, we're authenticated
+      if (isAuthenticated) {
+        console.log('[AuthGuard] Already authenticated from store');
+        setIsChecking(false);
+        return;
+      }
+
+      // Get token from storage
       const token = getToken();
 
       if (!token) {
-        console.log('[AuthGuard] No token found, redirecting to login');
-        setIsAuthenticated(false);
+        console.log('[AuthGuard] No token found, will redirect to login');
         setIsChecking(false);
-        redirectToLogin();
         return;
       }
 
       // Check if token is expired
       if (isTokenExpired(token)) {
-        console.log('[AuthGuard] Token expired, redirecting to login');
-        setIsAuthenticated(false);
+        console.log('[AuthGuard] Token expired, will redirect to login');
         setIsChecking(false);
-        redirectToLogin();
         return;
       }
 
-      // Token is valid
-      console.log('[AuthGuard] Token valid, granting access');
-      setIsAuthenticated(true);
+      // Token is valid - decode and populate store
+      const userId = getUserIdFromToken(token);
+      if (userId) {
+        login(token, {
+          id: userId,
+          email: '', // We don't have email in the token for now
+        });
+        console.log('[AuthGuard] Token valid, store populated');
+      }
+
       setIsChecking(false);
     } catch (error) {
       console.error('[AuthGuard] Error checking authentication:', error);
-      setIsAuthenticated(false);
       setIsChecking(false);
-      redirectToLogin();
     }
-  };
+  }, [isAuthenticated, login]);
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
+
+  // Handle navigation after auth check completes
+  useEffect(() => {
+    // Only navigate after checking is complete and user is not authenticated
+    if (!isChecking && !isAuthenticated) {
+      // Use setTimeout to ensure navigation happens after render
+      const timer = setTimeout(() => {
+        redirectToLogin();
+      }, 0);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isChecking, isAuthenticated]);
 
   /**
    * Redirect to login screen with return URL preserved
    */
   const redirectToLogin = () => {
-    // Get current route path to preserve as returnUrl
-    const currentPath = segments.join('/');
+    try {
+      // Get current route path to preserve as returnUrl
+      const currentPath = segments.join('/');
 
-    // Don't save auth routes as return URLs
-    const isAuthRoute =
-      segments[0] === '(auth)' || segments.includes('login') || segments.includes('register');
+      // Don't save auth routes as return URLs
+      const isAuthRoute =
+        segments[0] === '(auth)' || segments.includes('login') || segments.includes('register');
 
-    if (!isAuthRoute && currentPath) {
-      // Navigate to login with return URL
-      router.replace({
-        pathname: '/login',
-        params: { returnUrl: `/${currentPath}` },
-      });
-    } else {
-      // Just go to login without return URL
+      if (!isAuthRoute && currentPath) {
+        // Navigate to login with return URL
+        router.replace({
+          pathname: '/login',
+          params: { returnUrl: `/${currentPath}` },
+        });
+      } else {
+        // Just go to login without return URL
+        router.replace('/login');
+      }
+    } catch (error) {
+      console.error('[AuthGuard] Navigation error:', error);
+      // Fallback to simple navigation if parameterized navigation fails
       router.replace('/login');
     }
   };

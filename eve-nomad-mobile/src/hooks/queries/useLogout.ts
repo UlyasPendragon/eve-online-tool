@@ -7,6 +7,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { logout as logoutService } from '../../services/auth/logout.service';
+import { useAuthStore } from '../../stores';
 
 interface UseLogoutResult {
   logout: () => Promise<void>;
@@ -35,11 +36,16 @@ interface UseLogoutResult {
 export const useLogout = (): UseLogoutResult => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const authStore = useAuthStore();
 
   const mutation = useMutation({
     mutationFn: async () => {
       // Call logout service
       await logoutService();
+
+      // Clear Zustand auth store
+      authStore.logout();
+      console.log('[useLogout] Auth store cleared');
 
       // Clear all React Query cache
       queryClient.clear();
@@ -52,6 +58,8 @@ export const useLogout = (): UseLogoutResult => {
     },
     onError: (error) => {
       console.error('[useLogout] Logout failed:', error);
+      // Clear store even if backend logout fails (for security)
+      authStore.logout();
       // Even if logout fails, navigate to login for security
       router.replace('/login');
     },

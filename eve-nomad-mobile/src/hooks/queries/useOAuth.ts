@@ -13,6 +13,8 @@ import {
 import { saveToken } from '../../services/storage';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './keys';
+import { useAuthStore } from '../../stores';
+import { getUserIdFromToken, getEmailFromToken } from '../../utils/jwt';
 
 export interface UseOAuthResult {
   /** Initiate OAuth login flow */
@@ -60,6 +62,7 @@ export function useOAuth(): UseOAuthResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const authStore = useAuthStore();
 
   const login = useCallback(async () => {
     setIsLoading(true);
@@ -77,6 +80,19 @@ export function useOAuth(): UseOAuthResult {
         // Save token to secure storage
         await saveToken(result.token);
 
+        // Extract user information from JWT
+        const userId = getUserIdFromToken(result.token);
+        const email = getEmailFromToken(result.token);
+
+        if (userId) {
+          // Update Zustand auth store
+          authStore.login(result.token, {
+            id: userId,
+            email: email || '',
+          });
+          console.log('[useOAuth] Auth store updated');
+        }
+
         // Invalidate auth queries to refetch user data
         await queryClient.invalidateQueries({
           queryKey: queryKeys.auth.all,
@@ -84,26 +100,29 @@ export function useOAuth(): UseOAuthResult {
 
         console.log('[useOAuth] Login successful');
       } else if (result.type === 'cancel') {
-        // User cancelled - not an error
+        // User cancelled - not an error, but don't proceed
         console.log('[useOAuth] User cancelled login');
+        throw new Error('Login cancelled by user');
       } else if (result.type === 'error') {
         // OAuth error
         const errorMessage = result.error || 'Login failed';
         console.error('[useOAuth] Login error:', errorMessage);
         setError(errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (err) {
       // Unexpected error
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
       console.error('[useOAuth] Unexpected error:', err);
       setError(errorMessage);
+      throw err; // Re-throw so calling code can handle it
     } finally {
       setIsLoading(false);
 
       // Cool down browser
       await coolDownBrowser();
     }
-  }, [queryClient]);
+  }, [queryClient, authStore]);
 
   const clearError = useCallback(() => {
     setError(null);

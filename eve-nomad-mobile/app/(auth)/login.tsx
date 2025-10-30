@@ -15,16 +15,21 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     clearError();
-    await login();
 
-    // Check if we have a token now (login was successful)
-    if (!error && !isLoading) {
-      // Navigate to return URL if provided, otherwise go to dashboard
+    try {
+      // Wait for login to complete - only navigates on success
+      await login();
+
+      // Login succeeded, navigate to intended destination
       if (returnUrl) {
         router.replace(returnUrl);
       } else {
         router.replace('/(tabs)');
       }
+    } catch (err) {
+      // Error is already set by useOAuth hook
+      // User can try again
+      console.error('[LoginScreen] Login failed:', err);
     }
   };
 

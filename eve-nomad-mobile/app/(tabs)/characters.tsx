@@ -2,12 +2,13 @@
  * Characters Screen - EVE Nomad Mobile
  */
 
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { colors, typography, spacing } from '../../src/utils/theme';
+import { colors, spacing } from '../../src/utils/theme';
 import { useLogout } from '../../src/hooks/queries';
 import { Button } from '../../src/components/ui';
+import { CharacterList } from '../../src/components/characters/CharacterList';
 
 export default function CharactersScreen() {
   const router = useRouter();
@@ -45,13 +46,7 @@ export default function CharactersScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.content}>
-        <View style={styles.placeholder}>
-          <Text style={styles.title}>Character Management</Text>
-          <Text style={styles.description}>
-            View and switch between your EVE Online characters.
-          </Text>
-          <Text style={styles.comingSoon}>Coming Soon</Text>
-        </View>
+        <CharacterList />
 
         <View style={styles.logoutContainer}>
           <Button
@@ -73,32 +68,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: spacing.lg,
-    justifyContent: 'space-between',
-  },
-  placeholder: {
-    backgroundColor: colors.surface,
-    padding: spacing.xl,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  title: {
-    ...typography.h2,
-    color: colors.textPrimary,
-    marginBottom: spacing.md,
-    textAlign: 'center',
-  },
-  description: {
-    ...typography.body1,
-    color: colors.textSecondary,
-    marginBottom: spacing.lg,
-    textAlign: 'center',
-  },
-  comingSoon: {
-    ...typography.h4,
-    color: colors.accent,
   },
   logoutContainer: {
-    padding: spacing.md,
+    padding: spacing.lg,
+    backgroundColor: colors.background,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
 });
