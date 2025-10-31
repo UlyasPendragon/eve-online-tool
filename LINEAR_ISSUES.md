@@ -1,7 +1,7 @@
 # Linear Issues Index
 
-**Last Updated:** 2025-10-24 (Auto-maintained by Claude Code)
-**Total Issues:** 56 (0 In Progress, 28 Completed, 28 Backlog)
+**Last Updated:** 2025-10-30 (Auto-maintained by Claude Code)
+**Total Issues:** 78 (0 In Progress, 30 Completed, 48 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
@@ -10,7 +10,36 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ---
 
-## ✅ Completed Issues (28 issues)
+## 🔄 Strategic Pivot: Mobile → Web First (2025-10-30)
+
+**Major Development Change:**
+After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first to **web-first development**:
+
+- **Rationale**: EVE players are desktop users who rely on web tools (zKillboard, DOTLAN, EVE Tycoon)
+- **Strategy**: Build Next.js web MVP first (3 weeks), validate with community, then return to mobile in Phase 2
+- **Code Reuse**: 60-70% of mobile business logic transferring to web (API client, hooks, stores)
+- **Mobile Status**: Paused (not cancelled) - all completed work preserved for Phase 2
+
+**New Issues:** EVE-100 to EVE-121 (22 issues for web development)
+
+**See CLAUDE.md "Strategic Pivot" section for full rationale and implementation plan.**
+
+---
+
+## ✅ Completed Issues (30 issues)
+
+### Documentation & Strategic Planning (2 completed)
+
+#### EVE-101: Create Linear project and issues for web development
+- **Completed:** 2025-10-30
+- **Description:** Created "EVE Nomad Web Application" Linear project with all 22 web development issues (EVE-100 to EVE-121)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-101
+
+#### EVE-100: Document strategic pivot from mobile to web-first development
+- **Completed:** 2025-10-30
+- **Description:** Updated CLAUDE.md and LINEAR_ISSUES.md with comprehensive rationale for web-first development strategy
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-100
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/35
 
 ### Foundation & Infrastructure (18 completed)
 
@@ -176,7 +205,7 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ---
 
-## 📋 Backlog (25 issues)
+## 📋 Backlog (48 issues)
 
 ### Foundation & Infrastructure (6 backlog)
 
@@ -305,6 +334,138 @@ This document provides a quick reference index of all Linear issues for the EVE 
 - **Description:** Create smooth, compelling upgrade experience that converts free users to paid subscribers
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-43
 
+### Web App - EVE Nomad (20 backlog)
+
+#### Foundation (3 backlog)
+
+##### EVE-104: Update backend CORS for web client
+- **Created:** 2025-10-30
+- **Estimate:** 2 hours
+- **Description:** Update CORS configuration in eve-nomad-backend to allow requests from web client (localhost:3001 and production domain)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-104
+
+##### EVE-103: Copy and adapt reusable code from mobile
+- **Created:** 2025-10-30
+- **Estimate:** 6 hours
+- **Description:** Migrate business logic from mobile to web (API client, React Query hooks, Zustand stores, type definitions, utilities)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-103
+
+##### EVE-102: Initialize Next.js 15 web project
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Create eve-nomad-web/ directory with Next.js 15 (App Router), TypeScript, Tailwind, shadcn/ui, Zustand, React Query, Axios
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-102
+
+#### Authentication (5 backlog)
+
+##### EVE-109: Implement logout functionality
+- **Created:** 2025-10-30
+- **Estimate:** 3 hours
+- **Description:** Clear authentication state, call backend logout endpoint, redirect to login page
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-109
+
+##### EVE-108: Implement registration page
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Create registration form with email/password validation and error handling
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-108
+
+##### EVE-107: Implement OAuth callback handler
+- **Created:** 2025-10-30
+- **Estimate:** 6 hours
+- **Description:** Extract JWT from query parameters, save to localStorage, update stores, handle errors, redirect to dashboard
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-107
+
+##### EVE-106: Implement OAuth login page
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Create login page with "Login with EVE Online" button that redirects to backend OAuth endpoint
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-106
+
+##### EVE-105: Create Next.js middleware for route protection
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Implement Next.js 15 middleware to protect routes from unauthenticated access
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-105
+
+#### UI Components (4 backlog)
+
+##### EVE-113: Create custom CharacterList component
+- **Created:** 2025-10-30
+- **Estimate:** 3 hours
+- **Description:** Build CharacterList component with grid layout, loading/error/empty states
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-113
+
+##### EVE-112: Create custom CharacterCard component
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Convert mobile CharacterCard to web component with hover states and click handling
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-112
+
+##### EVE-111: Create EVE-themed CSS design system
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Convert mobile theme.ts to CSS variables (colors, typography, spacing, effects)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-111
+
+##### EVE-110: Install and configure shadcn/ui
+- **Created:** 2025-10-30
+- **Estimate:** 3 hours
+- **Description:** Install shadcn/ui with EVE-themed colors and configure base components
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-110
+
+#### Dashboard Features (5 backlog)
+
+##### EVE-118: Implement wallet and market pages
+- **Created:** 2025-10-30
+- **Estimate:** 8 hours
+- **Description:** Create wallet page (balance, transactions) and market page (orders, history)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-118
+
+##### EVE-117: Implement skills page with queue display
+- **Created:** 2025-10-30
+- **Estimate:** 8 hours
+- **Description:** Display skill queue with real-time training progress and completed skills browser
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-117
+
+##### EVE-116: Implement character detail page
+- **Created:** 2025-10-30
+- **Estimate:** 6 hours
+- **Description:** Create dynamic route /characters/[id] showing character profile, stats, and data
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-116
+
+##### EVE-115: Implement characters page
+- **Created:** 2025-10-30
+- **Estimate:** 6 hours
+- **Description:** Use CharacterList component to display user's characters with refresh functionality
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-115
+
+##### EVE-114: Create dashboard layout with navigation
+- **Created:** 2025-10-30
+- **Estimate:** 6 hours
+- **Description:** Build main dashboard layout with sidebar/header navigation, character switcher, logout button
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-114
+
+#### Deployment (3 backlog)
+
+##### EVE-121: Update documentation and Linear tracking
+- **Created:** 2025-10-30
+- **Estimate:** 3 hours
+- **Description:** Update CLAUDE.md, LINEAR_ISSUES.md, create completion comment on EVE-101, mark all web issues as Done
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-121
+
+##### EVE-120: Deploy to Vercel production
+- **Created:** 2025-10-30
+- **Estimate:** 4 hours
+- **Description:** Deploy web app to Vercel, configure environment variables, register OAuth callback with CCP
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-120
+
+##### EVE-119: End-to-end testing and bug fixes
+- **Created:** 2025-10-30
+- **Estimate:** 8 hours
+- **Description:** Comprehensive testing of all features (auth flow, navigation, data fetching, error handling)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-119
+
 ### Community & Marketing (4 backlog)
 
 #### EVE-58: Create regular update and release cadence
@@ -339,54 +500,64 @@ This document provides a quick reference index of all Linear issues for the EVE 
 ## 📊 Statistics
 
 ### Overall Progress
-- **Total Issues:** 56
-- **Completed:** 28 issues (50%)
+- **Total Issues:** 78
+- **Completed:** 30 issues (38%)
 - **In Progress:** 0 issues (0%)
-- **Backlog:** 28 issues (50%)
+- **Backlog:** 48 issues (62%)
 
 ### By Project
 - **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
-- **EVE Nomad Mobile:** 28 issues (10 completed, 0 in progress, 18 backlog)
+- **EVE Nomad Mobile (Paused):** 28 issues (10 completed, 18 backlog)
+- **EVE Nomad Web (Active):** 22 issues (2 completed, 20 backlog)
 - **Community & Marketing:** 4 issues (all backlog)
 
 ### By Phase
 - **Phase 1: Foundation** - 75% complete (18/24 issues)
-- **Phase 2: Mobile MVP** - 36% complete (10/28 issues)
+- **Phase 2a: Mobile MVP (Paused)** - 36% complete (10/28 issues)
+- **Phase 2b: Web MVP (Active)** - 9% complete (2/22 issues)
 - **Phase 3: Community** - 0% complete (0/4 issues)
 
 ### Recent Velocity
-- **Last 7 days:** 6 issues completed (EVE-80, 81, 82, 83, 84, 98)
+- **Last 7 days:** 8 issues completed (EVE-80, 81, 82, 83, 84, 98, 100, 101)
 - **Authentication phase:** Complete (EVE-80 through EVE-84)
-- **Bug fixes:** EVE-98 (AuthGuard navigation error) resolved
-- **Current focus:** Ready for feature implementation (core auth system stable)
+- **Strategic pivot:** Web-first development initiated (EVE-100, EVE-101)
+- **Current focus:** Web application initialization (EVE-102 next)
 
 ---
 
 ## 🎯 Current Development Status
 
 ### Active Work
-- **Status:** 🟢 Ready for next feature
-- **Branch:** `main` (clean, all docs merged)
-- **Last PR:** #31 (Merged) - Documentation: LINEAR_ISSUES.md + Claude Code Workflow
+- **Status:** 🌐 Web MVP Development (Phase 2b Active)
+- **Branch:** `docs/eve-100-strategic-pivot-documentation` (PR #35 open)
+- **Last PR:** #35 (Open) - Strategic Pivot Documentation
 
 ### Recently Completed
-- ✅ **Documentation Infrastructure** (PR #31, Oct 24)
-  - LINEAR_ISSUES.md issue index
-  - CLAUDE_CODE_WORKFLOW.md workflow guidelines
+- ✅ **Strategic Pivot to Web-First** (EVE-100, EVE-101, Oct 30)
+  - Comprehensive analysis and documentation
+  - Linear project with 22 web development issues
+  - CLAUDE.md and LINEAR_ISSUES.md updated
 
-- ✅ **Complete authentication system** (EVE-80 through EVE-84)
-  - OAuth login with EVE SSO
-  - Registration with validation
-  - Automatic token refresh
-  - Protected route guards
-  - Logout with complete cleanup
+- ✅ **Mobile Authentication System** (EVE-80 through EVE-84, Oct 24)
+  - Production-ready authentication (paused, not cancelled)
+  - OAuth, registration, token refresh, route guards, logout
+  - All code preserved for Phase 2 mobile return
 
-### Next Up (Awaiting Direction)
-Options for next development phase:
-1. **Character Management** (EVE-85 through EVE-89) - UI implementation with mock data
-2. **Skill Queue** (EVE-90, 91) - Display and real-time progress
-3. **Dashboard** (EVE-95) - Widget-based overview screen
-4. **Other priorities** - Backend features, infrastructure, etc.
+### Next Up
+**Immediate:** EVE-102 - Initialize Next.js 15 web project (4 hours)
+- Create `eve-nomad-web/` directory
+- Install Next.js 15 with App Router
+- Configure TypeScript, Tailwind, shadcn/ui
+- Set up Zustand, React Query, Axios
+
+**Following:** 3-week web MVP sprint (EVE-102 to EVE-121)
+1. Foundation (EVE-102-104) - 12 hours
+2. Authentication (EVE-105-109) - 21 hours
+3. UI Components (EVE-110-113) - 14 hours
+4. Dashboard Features (EVE-114-118) - 34 hours
+5. Deployment (EVE-119-121) - 15 hours
+
+**Total Estimate:** 96 hours (~3 weeks at 30-35 hours/week)
 
 ---
 
@@ -396,8 +567,10 @@ Options for next development phase:
 - All dates in YYYY-MM-DD format
 - Links point to Linear workspace issues
 - File updated after every work session and status change
-- **Authentication system complete** - Ready for feature development
-- **Mock data strategy** - Building UI first, backend integration later
+- **Strategic Pivot (2025-10-30):** Switched from mobile-first to web-first development
+- **Mobile Work Preserved:** All mobile authentication work (EVE-80 to EVE-84) saved for Phase 2
+- **Web MVP Active:** 22 new issues created (EVE-100 to EVE-121) for 3-week sprint
+- **Next Milestone:** Deploy functional web application to Vercel, validate with EVE community
 
 ---
 
