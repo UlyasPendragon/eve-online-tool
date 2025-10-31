@@ -6,6 +6,7 @@
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { Platform } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -51,8 +52,10 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="light" />
       </SafeAreaProvider>
-      {/* React Query DevTools - only enabled in development */}
-      {config.isDevelopment && <ReactQueryDevtools initialIsOpen={false} />}
+      {/* React Query DevTools - web only, not supported on mobile */}
+      {Platform.OS === 'web' && config.isDevelopment && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   );
 }

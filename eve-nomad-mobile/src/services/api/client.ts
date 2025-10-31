@@ -7,6 +7,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config } from '../../utils/config';
 import { getToken, saveToken, removeToken } from '../storage';
+import { isTokenExpiringSoon } from '../../utils/jwt';
 
 // Create Axios instance with base configuration
 export const apiClient: AxiosInstance = axios.create({
@@ -17,47 +18,8 @@ export const apiClient: AxiosInstance = axios.create({
   },
 });
 
-/**
- * Decode JWT token without verification
- * Returns null if token is invalid
- */
-const decodeToken = (token: string): { exp: number } | null => {
-  try {
-    const base64Url = token.split('.')[1];
-    if (!base64Url) return null;
-
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(''),
-    );
-
-    return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error('[API Client] Failed to decode token:', error);
-    return null;
-  }
-};
-
-/**
- * Check if token is expired or will expire soon
- * @param token - JWT token
- * @param bufferMinutes - Minutes before expiry to consider token as expired (default: 5)
- */
-const isTokenExpiringSoon = (token: string, bufferMinutes: number = 5): boolean => {
-  const decoded = decodeToken(token);
-  if (!decoded || !decoded.exp) {
-    return true; // Consider invalid token as expired
-  }
-
-  const expiryTime = decoded.exp * 1000; // Convert to milliseconds
-  const now = Date.now();
-  const buffer = bufferMinutes * 60 * 1000; // Convert minutes to milliseconds
-
-  return expiryTime - now < buffer;
-};
+// Track proactive token refresh to prevent race conditions
+let proactiveRefreshPromise: Promise<string> | null = null;
 
 // Request interceptor: Attach JWT token and proactively refresh if expiring soon
 apiClient.interceptors.request.use(
@@ -78,12 +40,23 @@ apiClient.interceptors.request.use(
         console.log('[API Client] Token expiring soon, refreshing proactively...');
 
         try {
-          // Refresh token before making the request
-          const response = await apiClient.post('/auth/refresh');
-          const newToken = response.data.token;
+          // Reuse in-flight refresh promise to prevent race conditions
+          if (!proactiveRefreshPromise) {
+            proactiveRefreshPromise = apiClient
+              .post('/auth/refresh')
+              .then((response) => {
+                const newToken = response.data.token;
+                saveToken(newToken);
+                return newToken;
+              })
+              .finally(() => {
+                // Clear promise after completion
+                proactiveRefreshPromise = null;
+              });
+          }
 
-          // Save new token
-          saveToken(newToken);
+          // Wait for refresh to complete
+          const newToken = await proactiveRefreshPromise;
 
           // Use new token for this request
           if (requestConfig.headers) {
