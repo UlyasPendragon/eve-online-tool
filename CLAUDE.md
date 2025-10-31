@@ -199,6 +199,12 @@ The repository contains comprehensive research and planning documentation. A det
   - Created reusable character components (CharacterCard, CharacterList)
   - All TypeScript checks passing (0 errors)
   - PR: https://github.com/UlyasPendragon/eve-online-tool/pull/33
+- ✅ **EVE-104**: Backend CORS configuration for web client
+  - Updated CORS_ORIGIN in eve-nomad-backend/.env to include http://localhost:3001
+  - Maintains existing mobile URLs (localhost:19006, localhost:19000)
+  - Added inline comments documenting mobile vs web URLs
+  - Enables Next.js web client to make API requests to backend
+  - Configuration complete (requires backend restart to take effect)
 
 ### Known Issues
 - ⚠️ **EVE-70**: TypeScript strict mode errors (65+ errors blocking CI)
