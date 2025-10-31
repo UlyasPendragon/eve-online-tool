@@ -1,8 +1,7 @@
 # Linear Issues Index
 
-**Last Updated:** 2025-10-30 (Auto-maintained by Claude Code)
-**Total Issues:** 57 (0 In Progress, 31 Completed, 26 Backlog)
-**Total Issues:** 78 (0 In Progress, 30 Completed, 48 Backlog)
+**Last Updated:** 2025-10-31 (Auto-maintained by Claude Code)
+**Total Issues:** 81 (0 In Progress, 33 Completed, 48 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
@@ -11,7 +10,6 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ---
 
-## ✅ Completed Issues (30 issues)
 ## 🔄 Strategic Pivot: Mobile → Web First (2025-10-30)
 
 **Major Development Change:**
@@ -28,7 +26,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 
 ---
 
-## ✅ Completed Issues (30 issues)
+## ✅ Completed Issues (33 issues)
 
 ### Documentation & Strategic Planning (2 completed)
 
