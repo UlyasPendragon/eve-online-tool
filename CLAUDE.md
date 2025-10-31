@@ -130,6 +130,16 @@ The repository contains comprehensive research and planning documentation. A det
   - Error handling that prioritizes security (logout locally even if backend fails)
   - Logout button in Characters screen with confirmation dialog
   - Logout UI accessible via main app navigation
+- ✅ **EVE-99**: Mobile authentication critical fixes and improvements
+  - Created centralized JWT utility module (src/utils/jwt.ts) with 7 functions
+  - Eliminated 150+ lines of code duplication across AuthGuard, useOAuth, API client
+  - Fixed token refresh race condition with promise deduplication
+  - Fixed AuthGuard useEffect dependencies (React best practices)
+  - Fixed login navigation timing with try-catch error propagation
+  - Added Zustand stores (auth, characters, settings)
+  - Created reusable character components (CharacterCard, CharacterList)
+  - All TypeScript checks passing (0 errors)
+  - PR: https://github.com/UlyasPendragon/eve-online-tool/pull/33
 
 ### Known Issues
 - ⚠️ **EVE-70**: TypeScript strict mode errors (65+ errors blocking CI)
@@ -150,7 +160,7 @@ The repository contains comprehensive research and planning documentation. A det
 ### Mobile App Status 🚀
 **EVE Nomad Mobile** - Active development in progress:
 - **Platform**: Cross-platform (iOS + Android) using React Native + Expo
-- **Status**: ✅ Authentication system complete, ready for feature implementation
+- **Status**: ✅ Authentication system complete with production-ready quality improvements
 - **Progress**:
   - ✅ Expo Router navigation (5-tab main app, auth flow, dynamic routes)
   - ✅ UI component library (7 EVE-themed components)
@@ -161,6 +171,13 @@ The repository contains comprehensive research and planning documentation. A det
     - Automatic token refresh (proactive + reactive)
     - Protected route guards with AuthGuard component
     - Logout functionality with complete token cleanup
+  - ✅ Authentication critical fixes (EVE-99):
+    - Centralized JWT utilities (DRY principle)
+    - Token refresh race condition eliminated
+    - React best practices compliance
+    - Production-ready error handling
+  - ✅ State management (Zustand stores for auth, characters, settings)
+  - ✅ Character components (CharacterCard, CharacterList)
   - 🔄 Next: Feature implementation (Skills, Wallet, Market, Characters)
 - **CCP Compliance**: ✅ Fully compliant freemium model
   - Free tier: Full ESI data access (skills, wallet, market orders, character info)
