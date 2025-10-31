@@ -1,12 +1,28 @@
 # Linear Issues Index
 
-**Last Updated:** 2025-10-24 (Auto-maintained by Claude Code)
+**Last Updated:** 2025-10-30 (Auto-maintained by Claude Code)
 **Total Issues:** 56 (0 In Progress, 28 Completed, 28 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
 **Linear Workspace:** https://linear.app/eve-online-tool
 **GitHub Repository:** https://github.com/UlyasPendragon/eve-online-tool
+
+---
+
+## 🔄 Strategic Pivot: Mobile → Web First (2025-10-30)
+
+**Major Development Change:**
+After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first to **web-first development**:
+
+- **Rationale**: EVE players are desktop users who rely on web tools (zKillboard, DOTLAN, EVE Tycoon)
+- **Strategy**: Build Next.js web MVP first (3 weeks), validate with community, then return to mobile in Phase 2
+- **Code Reuse**: 60-70% of mobile business logic transferring to web (API client, hooks, stores)
+- **Mobile Status**: Paused (not cancelled) - all completed work preserved for Phase 2
+
+**New Issues:** EVE-100 to EVE-121 (22 issues for web development)
+
+**See CLAUDE.md "Strategic Pivot" section for full rationale and implementation plan.**
 
 ---
 
