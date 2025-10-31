@@ -16,6 +16,65 @@ The repository contains comprehensive research and planning documentation. A det
 
 **Status**: ✅ **Active Development** - Phase 1 in progress
 
+## Strategic Pivot: Mobile → Web First
+
+**Decision Date:** 2025-10-30
+**Decision Maker:** Project Lead (based on EVE Online ecosystem analysis)
+
+**Rationale:** After analyzing the EVE Online player ecosystem and successful third-party tools, we've determined that a web-first approach is strategically superior:
+
+### Why Web First?
+
+1. **Target Audience = Desktop Players**
+   - EVE Online is a desktop game - players are already at their computers
+   - Players use tools while actively playing (second monitor setup)
+   - Mobile is "nice to have," web tools are "essential" to gameplay
+
+2. **Discoverability & Community**
+   - EVE players discover tools via Google searches and r/Eve subreddit
+   - Web tools appear in search results (SEO advantage)
+   - Mobile apps are hidden in app stores, require download before trial
+   - Community sharing: web links = instant access, mobile = friction
+
+3. **Successful EVE Tool Precedent**
+   - zKillboard (web) - community standard for killboard tracking
+   - DOTLAN (web) - essential navigation and sovereignty tool
+   - EVE Tycoon (web freemium) - profitable market tracking tool
+   - All major EVE tools are web-based, mobile is supplementary
+
+4. **Workflow Integration**
+   - Players have browsers open while gaming (wiki, fittings, maps)
+   - Copy-paste integration (fit codes, character names, system names)
+   - Future browser extension possibilities
+   - Desktop notifications work on web (push API)
+
+5. **Development Advantages**
+   - No Apple Developer Program requirement ($99/year)
+   - No app store approval process (instant deployment)
+   - Easier OAuth flow (standard redirects vs. deep links)
+   - Better code reuse (60-70% of mobile business logic transfers)
+   - Simpler testing (no device builds, simulators, or EAS complexity)
+
+### Implementation Strategy
+
+**Phase 1: Web MVP (Current - 3 weeks)**
+- Build Next.js 15 web application
+- Reuse business logic from mobile (API client, React Query, Zustand)
+- Create web-optimized UI with shadcn/ui
+- Deploy to Vercel
+- Validate with EVE community (r/Eve, forums)
+
+**Phase 2: Mobile Companion (Future - After Web Validation)**
+- Return to React Native mobile development
+- Mobile becomes "companion app" to web tool
+- Share backend API and business logic
+- Focus on mobile-specific features (skill notifications)
+
+**Code Preservation:**
+- `eve-nomad-mobile/` directory preserved for Phase 2
+- All completed work (authentication, components, stores) retained
+- Feature branch `feature/eve-85-mobile-auth-improvements` contains production-ready mobile auth
+
 ### Completed Work
 - ✅ **EVE-8**: EVE Partner Program application prepared
 - ✅ **EVE-9**: Development environment fully operational
@@ -161,17 +220,46 @@ The repository contains comprehensive research and planning documentation. A det
 **EVE Nomad Mobile** - Active development in progress:
 - **Platform**: Cross-platform (iOS + Android) using React Native + Expo
 - **Status**: ✅ Authentication system complete with production-ready quality improvements
+- **Backend API**: `eve-nomad-backend/` - Production-ready backend (OAuth, ESI, database, caching)
+- **Web App**: `eve-nomad-web/` - Next.js 15 web application (ACTIVE DEVELOPMENT - Phase 1)
+- **Mobile App**: `eve-nomad-mobile/` - React Native + Expo project (PAUSED - Phase 2 after web validation)
+
+### Web App Status 🌐
+**EVE Nomad Web** - Active development (Phase 1):
+- **Platform**: Next.js 15 with App Router (React framework)
+- **Status**: 🔄 **In Development** - Week 1 of 3-week MVP timeline
+- **Technology Stack**:
+  - Framework: Next.js 15 (SSR, App Router, Server Components)
+  - UI Library: shadcn/ui + Tailwind CSS
+  - State Management: Zustand (reused from mobile)
+  - Data Fetching: TanStack Query v5 (reused from mobile)
+  - HTTP Client: Axios (reused from mobile)
+  - Deployment: Vercel (production-ready)
 - **Progress**:
-  - ✅ Expo Router navigation (5-tab main app, auth flow, dynamic routes)
-  - ✅ UI component library (7 EVE-themed components)
-  - ✅ API client configured (environment variables, backend connectivity)
-  - ✅ Complete authentication system (EVE-80 through EVE-84):
-    - OAuth login with EVE SSO via deep linking
-    - Registration screen with email/password
-    - Automatic token refresh (proactive + reactive)
+  - 📋 Strategic pivot documented (EVE-100)
+  - 📋 Linear project created with 22 issues (EVE-100 to EVE-121)
+  - 📅 Next.js initialization (EVE-102)
+  - 📅 Business logic migration from mobile (EVE-103)
+  - 📅 Authentication system (EVE-105 to EVE-109)
+  - 📅 Dashboard implementation (EVE-114 to EVE-118)
+  - 📅 Production deployment (EVE-119 to EVE-121)
+- **Code Reuse**: 60-70% of mobile business logic transferring to web
+- **Timeline**: 3 weeks to functional MVP with all core features
+- **Why Web First**: See "Strategic Pivot" section above for detailed rationale
+
+### Mobile App Status 📱
+**EVE Nomad Mobile** - Paused for Phase 2 (post-web validation):
+- **Platform**: Cross-platform (iOS + Android) using React Native + Expo
+- **Status**: ⏸️ **Paused** - Returning in Phase 2 after web MVP validated with EVE community
+- **Completed Work** (Production-Ready):
+  - ✅ Complete authentication system (EVE-80 through EVE-84, EVE-99)
+    - OAuth login with EVE SSO via deep linking (eveapp://)
+    - Registration screen with email/password validation
+    - Automatic token refresh (proactive + reactive strategies)
     - Protected route guards with AuthGuard component
     - Logout functionality with complete token cleanup
   - ✅ Authentication critical fixes (EVE-99):
+  - ✅ Critical quality improvements (EVE-99)
     - Centralized JWT utilities (DRY principle)
     - Token refresh race condition eliminated
     - React best practices compliance
@@ -179,6 +267,15 @@ The repository contains comprehensive research and planning documentation. A det
   - ✅ State management (Zustand stores for auth, characters, settings)
   - ✅ Character components (CharacterCard, CharacterList)
   - 🔄 Next: Feature implementation (Skills, Wallet, Market, Characters)
+  - ✅ Navigation infrastructure (Expo Router with 5-tab layout)
+  - ✅ UI component library (7 EVE-themed components)
+  - ✅ State management (Zustand stores)
+  - ✅ API client with backend connectivity
+- **Code Preservation**:
+  - All mobile code preserved in `eve-nomad-mobile/` for Phase 2
+  - Feature branch `feature/eve-85-mobile-auth-improvements` contains latest work
+  - Business logic (API client, hooks, stores) being reused in web version
+- **Future Plan**: Mobile becomes "companion app" to web tool after validation
 - **CCP Compliance**: ✅ Fully compliant freemium model
   - Free tier: Full ESI data access (skills, wallet, market orders, character info)
   - Premium tier ($4.99/month): Backend services (historical storage, advanced notifications, multi-character analytics)
