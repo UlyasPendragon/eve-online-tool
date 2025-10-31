@@ -60,7 +60,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 
     // EAS Update configuration (for OTA updates)
     eas: {
-      projectId: process.env.EAS_PROJECT_ID || '',
+      projectId: 'd36f9ab3-312d-417d-8a07-75483c7e1644',
     },
   },
 });
