@@ -1,7 +1,7 @@
 # Linear Issues Index
 
-**Last Updated:** 2025-10-24 (Auto-maintained by Claude Code)
-**Total Issues:** 56 (0 In Progress, 28 Completed, 28 Backlog)
+**Last Updated:** 2025-10-30 (Auto-maintained by Claude Code)
+**Total Issues:** 57 (0 In Progress, 31 Completed, 26 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
@@ -10,7 +10,7 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ---
 
-## ✅ Completed Issues (28 issues)
+## ✅ Completed Issues (30 issues)
 
 ### Foundation & Infrastructure (18 completed)
 
@@ -110,7 +110,23 @@ This document provides a quick reference index of all Linear issues for the EVE 
 - **Description:** Reviewed and documented CCP's Developer License Agreement requirements
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-7
 
-### Mobile App - EVE Nomad (10 completed)
+### Mobile App - EVE Nomad (13 completed)
+
+#### EVE-99: Mobile Authentication Critical Fixes and Improvements
+- **Completed:** 2025-10-30
+- **Description:** Fixed 4 critical issues: JWT code duplication, token refresh race condition, AuthGuard useEffect dependencies, login navigation timing
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-99
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/33
+
+#### EVE-85: Fetch and display character list
+- **Completed:** 2025-10-30
+- **Description:** Character list UI with React Query, CharacterCard/CharacterList components, pull-to-refresh, loading/error/empty states
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-85
+
+#### EVE-79: Create global state management with Zustand
+- **Completed:** 2025-10-30
+- **Description:** Zustand stores for auth, characters, and settings state management (minimal MVP)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-79
 
 #### EVE-98: Bug: AuthGuard navigation error before router mount
 - **Completed:** 2025-10-24
@@ -176,7 +192,7 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ---
 
-## 📋 Backlog (25 issues)
+## 📋 Backlog (26 issues)
 
 ### Foundation & Infrastructure (6 backlog)
 
@@ -211,12 +227,7 @@ This document provides a quick reference index of all Linear issues for the EVE 
 - **Description:** Apply for acceptance into CCP's EVE Partner Program (target after 1,000+ MAU)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-8
 
-### Mobile App - Frontend Setup (3 backlog)
-
-#### EVE-79: Create global state management with Zustand
-- **Created:** 2025-10-23
-- **Description:** Set up Zustand for client-side state management (auth, active character, app settings)
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-79
+### Mobile App - Frontend Setup (2 backlog)
 
 #### EVE-77: Implement secure token storage with MMKV
 - **Created:** 2025-10-23
@@ -228,12 +239,7 @@ This document provides a quick reference index of all Linear issues for the EVE 
 - **Description:** Set up code quality tooling for consistent formatting and type safety
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-73
 
-### Mobile App - Character Management (5 backlog)
-
-#### EVE-85: Fetch and display character list
-- **Created:** 2025-10-23
-- **Description:** Create API wrapper and UI for displaying user's characters with mock data strategy for rapid UI development
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-85
+### Mobile App - Character Management (4 backlog)
 
 #### EVE-86: Implement character switcher functionality
 - **Created:** 2025-10-23
@@ -339,26 +345,28 @@ This document provides a quick reference index of all Linear issues for the EVE 
 ## 📊 Statistics
 
 ### Overall Progress
-- **Total Issues:** 56
-- **Completed:** 28 issues (50%)
+- **Total Issues:** 57
+- **Completed:** 31 issues (54%)
 - **In Progress:** 0 issues (0%)
-- **Backlog:** 28 issues (50%)
+- **Backlog:** 26 issues (46%)
 
 ### By Project
 - **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
-- **EVE Nomad Mobile:** 28 issues (10 completed, 0 in progress, 18 backlog)
+- **EVE Nomad Mobile:** 29 issues (13 completed, 0 in progress, 16 backlog)
 - **Community & Marketing:** 4 issues (all backlog)
 
 ### By Phase
 - **Phase 1: Foundation** - 75% complete (18/24 issues)
-- **Phase 2: Mobile MVP** - 36% complete (10/28 issues)
+- **Phase 2: Mobile MVP** - 45% complete (13/29 issues)
 - **Phase 3: Community** - 0% complete (0/4 issues)
 
 ### Recent Velocity
-- **Last 7 days:** 6 issues completed (EVE-80, 81, 82, 83, 84, 98)
+- **Last 7 days:** 9 issues completed (EVE-79, 80, 81, 82, 83, 84, 85, 98, 99)
+- **State management:** Complete (EVE-79 Zustand stores)
 - **Authentication phase:** Complete (EVE-80 through EVE-84)
 - **Bug fixes:** EVE-98 (AuthGuard navigation error) resolved
-- **Current focus:** Ready for feature implementation (core auth system stable)
+- **Code quality improvements:** EVE-99 (4 critical fixes) resolved
+- **Current focus:** Ready for feature implementation (character management next)
 
 ---
 
@@ -366,10 +374,23 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ### Active Work
 - **Status:** 🟢 Ready for next feature
-- **Branch:** `main` (clean, all docs merged)
-- **Last PR:** #31 (Merged) - Documentation: LINEAR_ISSUES.md + Claude Code Workflow
+- **Branch:** `feature/eve-85-mobile-auth-improvements` (PR #33 pending)
+- **Last Completed:** EVE-99 (Mobile Authentication Critical Fixes)
 
 ### Recently Completed
+- ✅ **Critical Authentication Fixes** (EVE-99, Oct 30)
+  - Created centralized JWT utility module (eliminated 150+ lines duplication)
+  - Fixed token refresh race condition with promise deduplication
+  - Fixed AuthGuard useEffect dependencies (React best practices)
+  - Fixed login navigation timing with try-catch pattern
+  - All TypeScript checks passing (0 errors)
+
+- ✅ **State Management** (EVE-79, Oct 30)
+  - Zustand stores for auth, characters, settings
+  - Integration with login/logout flows
+  - AuthGuard uses centralized auth state
+  - Type-safe hooks with TypeScript
+
 - ✅ **Documentation Infrastructure** (PR #31, Oct 24)
   - LINEAR_ISSUES.md issue index
   - CLAUDE_CODE_WORKFLOW.md workflow guidelines
@@ -383,10 +404,11 @@ This document provides a quick reference index of all Linear issues for the EVE 
 
 ### Next Up (Awaiting Direction)
 Options for next development phase:
-1. **Character Management** (EVE-85 through EVE-89) - UI implementation with mock data
+1. **Character Management** (EVE-85 through EVE-89) - UI implementation with mock data (recommended)
 2. **Skill Queue** (EVE-90, 91) - Display and real-time progress
 3. **Dashboard** (EVE-95) - Widget-based overview screen
-4. **Other priorities** - Backend features, infrastructure, etc.
+4. **MMKV Persistence** (EVE-77) - Add persistent storage to Zustand stores
+5. **Other priorities** - Backend features, infrastructure, etc.
 
 ---
 
@@ -396,6 +418,7 @@ Options for next development phase:
 - All dates in YYYY-MM-DD format
 - Links point to Linear workspace issues
 - File updated after every work session and status change
+- **State management complete** - Zustand stores ready for use (EVE-79)
 - **Authentication system complete** - Ready for feature development
 - **Mock data strategy** - Building UI first, backend integration later
 
