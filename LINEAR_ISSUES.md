@@ -1,7 +1,7 @@
 # Linear Issues Index
 
-**Last Updated:** 2025-10-31 (Auto-maintained by Claude Code)
-**Total Issues:** 81 (0 In Progress, 33 Completed, 48 Backlog)
+**Last Updated:** 2025-11-01 (Auto-maintained by Claude Code)
+**Total Issues:** 79 (0 In Progress, 36 Completed, 43 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
@@ -26,7 +26,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 
 ---
 
-## ✅ Completed Issues (33 issues)
+## ✅ Completed Issues (35 issues)
 
 ### Documentation & Strategic Planning (2 completed)
 
@@ -40,6 +40,26 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Description:** Updated CLAUDE.md and LINEAR_ISSUES.md with comprehensive rationale for web-first development strategy
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-100
 - **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/35
+
+### Web App - EVE Nomad (3 completed)
+
+#### EVE-106: Implement OAuth login page
+- **Completed:** 2025-11-01
+- **Description:** Complete OAuth authentication system with login page, callback handler, and session management. Includes route structure fixes, config validation improvements, and end-to-end OAuth flow testing.
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-106
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/63
+
+#### EVE-103: Migrate mobile code to web (foundation + services + hooks + components)
+- **Completed:** 2025-10-31
+- **Description:** Migrated 60-70% of reusable business logic from mobile to web (API client, React Query hooks, Zustand stores, type definitions, JWT utilities, character components)
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-103
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/59
+
+#### EVE-102: Initialize Next.js 15 web project
+- **Completed:** 2025-10-31
+- **Description:** Created eve-nomad-web/ directory with Next.js 16.0.1, TypeScript 5.9.3, Tailwind CSS 4.1.16, Zustand, React Query, Axios. Development server verified on port 3001.
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-102
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/58
 
 ### Foundation & Infrastructure (18 completed)
 
@@ -141,16 +161,11 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 
 ### Mobile App - EVE Nomad (13 completed)
 
-#### EVE-99: Mobile Authentication Critical Fixes and Improvements
-- **Completed:** 2025-10-30
-- **Description:** Fixed 4 critical issues: JWT code duplication, token refresh race condition, AuthGuard useEffect dependencies, login navigation timing
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-99
-- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/33
-
-#### EVE-85: Fetch and display character list
-- **Completed:** 2025-10-30
-- **Description:** Character list UI with React Query, CharacterCard/CharacterList components, pull-to-refresh, loading/error/empty states
+#### EVE-85: Mobile Authentication Critical Fixes and Improvements
+- **Completed:** 2025-10-31
+- **Description:** Fixed 4 critical issues: JWT code duplication (150+ lines eliminated), token refresh race condition, AuthGuard useEffect dependencies, login navigation timing. Added Zustand stores and character components.
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-85
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/33
 
 #### EVE-79: Create global state management with Zustand
 - **Completed:** 2025-10-30
@@ -341,9 +356,9 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Description:** Create smooth, compelling upgrade experience that converts free users to paid subscribers
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-43
 
-### Web App - EVE Nomad (20 backlog)
+### Web App - EVE Nomad (17 backlog)
 
-#### Foundation (3 backlog)
+#### Foundation (1 backlog)
 
 ##### EVE-104: Update backend CORS for web client
 - **Created:** 2025-10-30
@@ -351,19 +366,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Description:** Update CORS configuration in eve-nomad-backend to allow requests from web client (localhost:3001 and production domain)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-104
 
-##### EVE-103: Copy and adapt reusable code from mobile
-- **Created:** 2025-10-30
-- **Estimate:** 6 hours
-- **Description:** Migrate business logic from mobile to web (API client, React Query hooks, Zustand stores, type definitions, utilities)
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-103
-
-##### EVE-102: Initialize Next.js 15 web project
-- **Created:** 2025-10-30
-- **Estimate:** 4 hours
-- **Description:** Create eve-nomad-web/ directory with Next.js 15 (App Router), TypeScript, Tailwind, shadcn/ui, Zustand, React Query, Axios
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-102
-
-#### Authentication (5 backlog)
+#### Authentication (4 backlog)
 
 ##### EVE-109: Implement logout functionality
 - **Created:** 2025-10-30
@@ -382,12 +385,6 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Estimate:** 6 hours
 - **Description:** Extract JWT from query parameters, save to localStorage, update stores, handle errors, redirect to dashboard
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-107
-
-##### EVE-106: Implement OAuth login page
-- **Created:** 2025-10-30
-- **Estimate:** 4 hours
-- **Description:** Create login page with "Login with EVE Online" button that redirects to backend OAuth endpoint
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-106
 
 ##### EVE-105: Create Next.js middleware for route protection
 - **Created:** 2025-10-30
@@ -507,118 +504,83 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 ## 📊 Statistics
 
 ### Overall Progress
-- **Total Issues:** 57
-- **Completed:** 31 issues (54%)
+- **Total Issues:** 79 (1 removed duplicate EVE-99)
+- **Completed:** 36 issues (46%)
 - **In Progress:** 0 issues (0%)
-- **Backlog:** 26 issues (46%)
+- **Backlog:** 43 issues (54%)
 
 ### By Project
 - **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
-- **EVE Nomad Mobile:** 29 issues (13 completed, 0 in progress, 16 backlog)
-- **Total Issues:** 78
-- **Completed:** 30 issues (38%)
-- **In Progress:** 0 issues (0%)
-- **Backlog:** 48 issues (62%)
-
-### By Project
-- **Foundation & Infrastructure:** 24 issues (18 completed, 6 backlog)
-- **EVE Nomad Mobile (Paused):** 28 issues (10 completed, 18 backlog)
-- **EVE Nomad Web (Active):** 22 issues (2 completed, 20 backlog)
+- **EVE Nomad Mobile (Paused):** 26 issues (13 completed, 13 backlog)
+- **EVE Nomad Web (Active):** 22 issues (5 completed, 17 backlog)
 - **Community & Marketing:** 4 issues (all backlog)
+- **Documentation & Strategic:** 3 issues (2 completed, 1 backlog)
 
 ### By Phase
 - **Phase 1: Foundation** - 75% complete (18/24 issues)
-- **Phase 2: Mobile MVP** - 45% complete (13/29 issues)
+- **Phase 2a: Mobile MVP (Paused)** - 50% complete (13/26 issues)
+- **Phase 2b: Web MVP (Active)** - 23% complete (5/22 issues)
 - **Phase 3: Community** - 0% complete (0/4 issues)
 
 ### Recent Velocity
-- **Last 7 days:** 9 issues completed (EVE-79, 80, 81, 82, 83, 84, 85, 98, 99)
-- **State management:** Complete (EVE-79 Zustand stores)
-- **Authentication phase:** Complete (EVE-80 through EVE-84)
-- **Bug fixes:** EVE-98 (AuthGuard navigation error) resolved
-- **Code quality improvements:** EVE-99 (4 critical fixes) resolved
-- **Current focus:** Ready for feature implementation (character management next)
-- **Phase 2a: Mobile MVP (Paused)** - 36% complete (10/28 issues)
-- **Phase 2b: Web MVP (Active)** - 9% complete (2/22 issues)
-- **Phase 3: Community** - 0% complete (0/4 issues)
-
-### Recent Velocity
-- **Last 7 days:** 8 issues completed (EVE-80, 81, 82, 83, 84, 98, 100, 101)
-- **Authentication phase:** Complete (EVE-80 through EVE-84)
-- **Strategic pivot:** Web-first development initiated (EVE-100, EVE-101)
-- **Current focus:** Web application initialization (EVE-102 next)
+- **Last 7 days:** 5 issues completed (EVE-85, 100, 102, 103, 106)
+- **Strategic pivot:** Web-first development initiated and executed
+- **Web foundation:** Next.js initialization and code migration complete
+- **OAuth authentication:** Complete OAuth flow implemented and tested
+- **Mobile auth:** Critical fixes merged (production-ready, paused for Phase 2)
+- **Current focus:** Web features (EVE-104, 105, 107-109)
 
 ---
 
 ## 🎯 Current Development Status
 
 ### Active Work
-- **Status:** 🟢 Ready for next feature
-- **Branch:** `feature/eve-85-mobile-auth-improvements` (PR #33 pending)
-- **Last Completed:** EVE-99 (Mobile Authentication Critical Fixes)
-
-### Recently Completed
-- ✅ **Critical Authentication Fixes** (EVE-99, Oct 30)
-  - Created centralized JWT utility module (eliminated 150+ lines duplication)
-  - Fixed token refresh race condition with promise deduplication
-  - Fixed AuthGuard useEffect dependencies (React best practices)
-  - Fixed login navigation timing with try-catch pattern
-  - All TypeScript checks passing (0 errors)
-
-- ✅ **State Management** (EVE-79, Oct 30)
-  - Zustand stores for auth, characters, settings
-  - Integration with login/logout flows
-  - AuthGuard uses centralized auth state
-  - Type-safe hooks with TypeScript
-
-- ✅ **Documentation Infrastructure** (PR #31, Oct 24)
-  - LINEAR_ISSUES.md issue index
-  - CLAUDE_CODE_WORKFLOW.md workflow guidelines
-
-- ✅ **Complete authentication system** (EVE-80 through EVE-84)
-  - OAuth login with EVE SSO
-  - Registration with validation
-  - Automatic token refresh
-  - Protected route guards
-  - Logout with complete cleanup
-
-### Next Up (Awaiting Direction)
-Options for next development phase:
-1. **Character Management** (EVE-85 through EVE-89) - UI implementation with mock data (recommended)
-2. **Skill Queue** (EVE-90, 91) - Display and real-time progress
-3. **Dashboard** (EVE-95) - Widget-based overview screen
-4. **MMKV Persistence** (EVE-77) - Add persistent storage to Zustand stores
-5. **Other priorities** - Backend features, infrastructure, etc.
 - **Status:** 🌐 Web MVP Development (Phase 2b Active)
-- **Branch:** `docs/eve-100-strategic-pivot-documentation` (PR #35 open)
-- **Last PR:** #35 (Open) - Strategic Pivot Documentation
+- **Last Completed:** EVE-106 (OAuth login page and callback handler)
+- **All PRs Merged:** #33 (EVE-85), #35 (EVE-100), #58 (EVE-102), #59 (EVE-103), #63 (EVE-106)
 
-### Recently Completed
-- ✅ **Strategic Pivot to Web-First** (EVE-100, EVE-101, Oct 30)
-  - Comprehensive analysis and documentation
-  - Linear project with 22 web development issues
-  - CLAUDE.md and LINEAR_ISSUES.md updated
+### Recently Completed (Last 7 Days)
+- ✅ **OAuth Authentication Complete** (EVE-106, Nov 1)
+  - Complete OAuth flow implemented and tested end-to-end
+  - Login page with EVE SSO integration
+  - Callback handler with token validation and localStorage persistence
+  - Route structure fixes and config validation improvements
+  - Authenticated character: Pandora Pendragon (ID: 2113538741)
+  - Backend redirect changes for web OAuth flow
 
-- ✅ **Mobile Authentication System** (EVE-80 through EVE-84, Oct 24)
-  - Production-ready authentication (paused, not cancelled)
-  - OAuth, registration, token refresh, route guards, logout
-  - All code preserved for Phase 2 mobile return
+- ✅ **Web Foundation Complete** (EVE-102, EVE-103, Oct 31)
+  - Next.js 16 project initialized with TypeScript, Tailwind, Zustand, React Query
+  - 60-70% of mobile business logic migrated to web
+  - API client, React Query hooks, Zustand stores, JWT utilities
+  - Character components adapted for web
+  - Development server running on port 3001
+
+- ✅ **Strategic Pivot Executed** (EVE-100, Oct 30)
+  - Comprehensive documentation of web-first rationale
+  - Implementation strategy defined (3-week MVP timeline)
+  - Mobile work preserved for Phase 2
+
+- ✅ **Mobile Authentication Production-Ready** (EVE-85, Oct 31)
+  - 4 critical fixes: JWT utilities, race conditions, React best practices, navigation
+  - 150+ lines of code duplication eliminated
+  - Zustand state management added
+  - Character components created
+  - Paused for Phase 2 (post-web validation)
 
 ### Next Up
-**Immediate:** EVE-102 - Initialize Next.js 15 web project (4 hours)
-- Create `eve-nomad-web/` directory
-- Install Next.js 15 with App Router
-- Configure TypeScript, Tailwind, shadcn/ui
-- Set up Zustand, React Query, Axios
+**Status Check Required:**
+- EVE-104: Backend CORS (may already be done - WEB_APP_URL configured)
+- EVE-107: OAuth callback handler (may already be done - implemented in EVE-106)
 
-**Following:** 3-week web MVP sprint (EVE-102 to EVE-121)
-1. Foundation (EVE-102-104) - 12 hours
-2. Authentication (EVE-105-109) - 21 hours
-3. UI Components (EVE-110-113) - 14 hours
-4. Dashboard Features (EVE-114-118) - 34 hours
-5. Deployment (EVE-119-121) - 15 hours
+**Next Features:**
+1. Next.js middleware for route protection (EVE-105) - 4 hours
+2. Registration page (EVE-108) - 4 hours
+3. Logout functionality (EVE-109) - 3 hours
+4. UI Components (EVE-110-113) - 14 hours
+5. Dashboard Features (EVE-114-118) - 34 hours
+6. Deployment (EVE-119-121) - 15 hours
 
-**Total Estimate:** 96 hours (~3 weeks at 30-35 hours/week)
+**Revised Estimate:** ~74-78 hours remaining (~2-2.5 weeks at 30-35 hours/week)
 
 ---
 
@@ -628,13 +590,11 @@ Options for next development phase:
 - All dates in YYYY-MM-DD format
 - Links point to Linear workspace issues
 - File updated after every work session and status change
-- **State management complete** - Zustand stores ready for use (EVE-79)
-- **Authentication system complete** - Ready for feature development
-- **Mock data strategy** - Building UI first, backend integration later
+- **EVE-99 Duplicate Removed:** EVE-99 was a documentation reference to EVE-85 (same PR #33)
 - **Strategic Pivot (2025-10-30):** Switched from mobile-first to web-first development
-- **Mobile Work Preserved:** All mobile authentication work (EVE-80 to EVE-84) saved for Phase 2
-- **Web MVP Active:** 22 new issues created (EVE-100 to EVE-121) for 3-week sprint
-- **Next Milestone:** Deploy functional web application to Vercel, validate with EVE community
+- **Mobile Work Preserved:** All mobile authentication work saved for Phase 2 (production-ready)
+- **Web Foundation Complete (2025-10-31):** Next.js 16 initialized + 60-70% mobile code migrated
+- **Next Milestone:** Complete web authentication system (EVE-104 to EVE-109)
 
 ---
 
