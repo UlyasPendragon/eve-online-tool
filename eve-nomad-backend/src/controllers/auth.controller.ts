@@ -184,23 +184,16 @@ export async function callbackHandler(
       return reply.redirect(deepLinkUrl);
     }
 
-    // For web clients, return JSON response
-    return reply.send({
-      success: true,
-      message: 'Authentication successful',
-      token: jwtToken,
-      user: {
-        id: user.id,
-        subscriptionTier: user.subscriptionTier,
-        subscriptionStatus: user.subscriptionStatus,
-      },
-      character: {
-        id: character.id,
-        characterId: character.characterId,
-        characterName: character.characterName,
-        corporationId: character.corporationId,
-      },
-    });
+    // For web clients, redirect to web app callback page with token
+    const webAppUrl = process.env['WEB_APP_URL'] || 'http://localhost:3001';
+    const callbackUrl = new URL('/auth/callback', webAppUrl);
+    callbackUrl.searchParams.set('token', jwtToken);
+    callbackUrl.searchParams.set('userId', user.id);
+    callbackUrl.searchParams.set('characterId', character.characterId.toString());
+    callbackUrl.searchParams.set('characterName', character.characterName);
+    callbackUrl.searchParams.set('subscriptionTier', user.subscriptionTier);
+
+    return reply.redirect(callbackUrl.toString());
   } catch (error) {
     console.error('[AuthController] OAuth callback error:', error);
 
