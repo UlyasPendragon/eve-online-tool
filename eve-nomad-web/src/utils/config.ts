@@ -9,7 +9,7 @@
 // Next.js requires NEXT_PUBLIC_ prefix for client-side environment variables
 const getEnvVar = (key: string, defaultValue?: string): string => {
   const value = process.env[`NEXT_PUBLIC_${key}`];
-  if (!value && !defaultValue) {
+  if (!value && defaultValue === undefined) {
     throw new Error(`Missing required environment variable: NEXT_PUBLIC_${key}`);
   }
   return value || defaultValue || '';
