@@ -70,7 +70,17 @@ Thank you for your interest in contributing to EVE Online Tool! This document pr
 
 ## Development Workflow
 
-### 1. Create a Branch
+**IMPORTANT**: All development work MUST follow the GitHub feature branch workflow. Direct commits to `main` are discouraged.
+
+### Workflow Overview
+
+```
+Linear Issue → Feature Branch → Development → Commit → Push → Pull Request → Review → Merge
+```
+
+### Before Starting ANY Issue
+
+#### 1. Create Feature Branch Immediately
 
 ```bash
 git checkout main
@@ -87,45 +97,218 @@ git checkout -b feature/eve-XX-brief-description
 
 Always include the Linear issue ID (EVE-XX) in the branch name.
 
-### 2. Make Your Changes
+#### 2. Add to Todo List (If Using Claude Code)
+
+Create a todo list item: "Create and push feature branch for EVE-XX"
+
+### During Development
+
+#### 3. Make Your Changes
 
 - Write clean, readable code following our style guide
 - Add tests for new functionality
 - Update documentation as needed
 - Run linting and type checking frequently
 
-### 3. Test Your Changes
+#### 4. Commit Frequently
+
+Commit after each logical unit of work (not just at the end):
+- After implementing a feature component
+- After fixing a bug
+- After writing tests
+- After updating documentation
+
+#### 5. Run Quality Checks Before Each Commit
 
 ```bash
-# Run type checking
+# Backend
+cd eve-nomad-backend
 pnpm typecheck
-
-# Run linting
 pnpm lint
+pnpm test  # When tests exist
 
-# Run tests
-pnpm test
+# Mobile
+cd eve-nomad-mobile
+pnpm typecheck
+pnpm format .
 
-# Run all quality checks
-pnpm typecheck && pnpm lint && pnpm test
+# Web
+cd eve-nomad-web
+pnpm typecheck
+pnpm lint
 ```
 
-### 4. Commit Your Changes
+#### 6. Commit Your Changes
 
 ```bash
 git add .
-git commit -m "EVE-XX: Brief description of change"
+git commit -m "EVE-XX: Brief description
+
+Detailed explanation of changes:
+- What was changed
+- Why it was changed
+- How it works
+
+Closes EVE-XX
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
-See [Commit Message Convention](#commit-message-convention) below.
+See [Commit Message Convention](#commit-message-convention) below for detailed format.
 
-### 5. Push and Create PR
+### After Completing Issue
+
+#### 7. Push Feature Branch
 
 ```bash
-git push origin feature/eve-XX-brief-description
+git push -u origin feature/eve-XX-description
 ```
 
-Then create a pull request on GitHub using the PR template.
+#### 8. Create Pull Request
+
+```bash
+gh pr create --title "EVE-XX: Brief title" --body "$(cat <<'EOF'
+## Summary
+Brief overview of changes
+
+## Issues
+Closes https://linear.app/eve-online-tool/issue/EVE-XX
+
+## Changes
+- List of major changes
+- New files created
+- Modified files
+
+## Testing
+How to test the changes
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
+
+Or use GitHub web interface with the PR template.
+
+**PR Title Format**: `EVE-XX: Brief description matching issue title`
+
+#### 9. Update Linear Issue
+
+The Linear-GitHub integration should automatically link the PR, but verify:
+- PR appears in Linear issue activity feed
+- Issue status updated if needed
+
+#### 10. Update CLAUDE.md (After Merge)
+
+Add completed work to the "Completed Work" section with:
+- Issue number and title
+- Brief description of implementation
+- Key files modified
+- Links to PR and Linear issue
+
+### Todo List Template
+
+For every Linear issue, consider adding these to your todo list:
+
+```
+- [ ] Create feature branch (feature/eve-XX-description)
+- [ ] Implement changes
+- [ ] Run quality checks (typecheck, lint, format)
+- [ ] Commit changes with Linear issue ID
+- [ ] Push branch to GitHub
+- [ ] Create Pull Request
+- [ ] Update Linear issue with PR link
+- [ ] Update CLAUDE.md with completed work
+```
+
+### Best Practices
+
+✅ **DO:**
+- Create feature branch BEFORE any code changes
+- Commit frequently with clear messages
+- Reference Linear issue ID in ALL commits
+- Run quality checks before pushing
+- Write comprehensive PR descriptions
+- Update Linear and CLAUDE.md after merge
+
+❌ **DON'T:**
+- Commit directly to `main` branch
+- Create PRs with uncommitted work from other issues mixed in
+- Skip quality checks (typecheck, lint, format)
+- Use vague commit messages ("fix stuff", "updates")
+- Forget to update Linear or CLAUDE.md
+- Batch multiple unrelated issues in one PR
+
+### Handling Partial/Incomplete Work
+
+If you have uncommitted work for Issue A but need to start Issue B:
+
+**Option 1: Stash** (for very small changes)
+```bash
+git stash push -m "WIP: EVE-A partial work"
+git checkout -b feature/eve-B-description
+# ... work on EVE-B ...
+git checkout feature/eve-A-description
+git stash pop
+```
+
+**Option 2: Commit to Feature Branch** (preferred)
+```bash
+git checkout -b feature/eve-A-description
+git add <files for EVE-A>
+git commit -m "WIP: EVE-A partial implementation (incomplete)"
+git push -u origin feature/eve-A-description
+git checkout main
+git checkout -b feature/eve-B-description
+```
+
+### Linear-GitHub Integration
+
+The repository has Linear-GitHub two-way sync enabled:
+
+**GitHub → Linear:**
+- Commits with `EVE-XX` in message appear in Linear issue activity
+- PR creation/updates appear in Linear
+- PR merge closes Linear issue (if commit has `Closes EVE-XX`)
+
+**Linear → GitHub:**
+- Issue creation includes GitHub issue link
+- Issue updates sync to GitHub (when applicable)
+
+### Repository Configuration
+
+- **Branch Protection**: `main` branch has protection rules
+  - Required pull request reviews
+  - Required status checks (CI/CD)
+  - No direct pushes to main
+- **CI/CD**: GitHub Actions run on all PRs
+  - Linting
+  - Type checking
+  - Tests
+  - Security scanning
+- **Linear Integration**: Two-way sync active
+- **PR Template**: `.github/pull_request_template.md` provides structure
+
+### Troubleshooting
+
+**Problem**: "CI failing on my PR"
+- **Solution**: Run quality checks locally first, fix errors before pushing
+
+**Problem**: "Linear issue not linked to PR"
+- **Solution**: Ensure commit message includes `Closes EVE-XX` or `Fixes EVE-XX`
+
+**Problem**: "Accidentally committed to main"
+- **Solution**:
+  ```bash
+  git reset --soft HEAD~1  # Undo commit, keep changes
+  git checkout -b feature/eve-XX-description
+  git commit -m "EVE-XX: ..."
+  git push -u origin feature/eve-XX-description
+  ```
+
+**Problem**: "Need to switch issues mid-work"
+- **Solution**: Use Option 2 above (commit WIP to feature branch)
 
 ## Branching Strategy
 
