@@ -67,4 +67,5 @@ export const queryKeys = {
  * Usage:
  *   type CharacterKey = QueryKey<typeof queryKeys.characters.detail>;
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type QueryKey<T> = T extends (...args: any[]) => infer R ? R : T;
