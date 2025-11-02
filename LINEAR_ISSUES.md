@@ -1,7 +1,7 @@
 # Linear Issues Index
 
 **Last Updated:** 2025-11-01 (Auto-maintained by Claude Code)
-**Total Issues:** 79 (0 In Progress, 36 Completed, 43 Backlog)
+**Total Issues:** 79 (0 In Progress, 39 Completed, 40 Backlog)
 
 This document provides a quick reference index of all Linear issues for the EVE Online Tool project.
 
@@ -26,7 +26,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 
 ---
 
-## ✅ Completed Issues (35 issues)
+## ✅ Completed Issues (39 issues)
 
 ### Documentation & Strategic Planning (2 completed)
 
@@ -41,7 +41,25 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-100
 - **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/35
 
-### Web App - EVE Nomad (3 completed)
+### Web App - EVE Nomad (6 completed)
+
+#### EVE-110: Setup shadcn/ui component library with EVE theme
+- **Completed:** 2025-11-01
+- **Description:** Complete shadcn/ui integration with EVE Online themed styling. Created Button and Card components, lib/utils.ts helper, components.json config. All shadcn/ui CSS variables mapped to EVE theme for automatic theming.
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-110
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/66
+
+#### EVE-109: Implement logout functionality
+- **Completed:** 2025-11-01
+- **Description:** Complete logout system with HTTP cookie clearing, localStorage cleanup, and reusable LogoutButton component. Fixed critical security issue where middleware still saw user as authenticated after logout.
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-109
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/65
+
+#### EVE-105: Create Next.js middleware for route protection
+- **Completed:** 2025-11-01
+- **Description:** Server-side authentication middleware with JWT cookie validation. Protected routes redirect to login with returnUrl preservation. Complete OAuth flow updated to pass returnUrl through backend state for seamless UX.
+- **Link:** https://linear.app/eve-online-tool/issue/EVE-105
+- **PR:** https://github.com/UlyasPendragon/eve-online-tool/pull/64
 
 #### EVE-106: Implement OAuth login page
 - **Completed:** 2025-11-01
@@ -236,8 +254,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 
 ---
 
-## 📋 Backlog (26 issues)
-## 📋 Backlog (48 issues)
+## 📋 Backlog (40 issues)
 
 ### Foundation & Infrastructure (6 backlog)
 
@@ -356,7 +373,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Description:** Create smooth, compelling upgrade experience that converts free users to paid subscribers
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-43
 
-### Web App - EVE Nomad (17 backlog)
+### Web App - EVE Nomad (14 backlog)
 
 #### Foundation (1 backlog)
 
@@ -366,13 +383,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Description:** Update CORS configuration in eve-nomad-backend to allow requests from web client (localhost:3001 and production domain)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-104
 
-#### Authentication (4 backlog)
-
-##### EVE-109: Implement logout functionality
-- **Created:** 2025-10-30
-- **Estimate:** 3 hours
-- **Description:** Clear authentication state, call backend logout endpoint, redirect to login page
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-109
+#### Authentication (1 backlog)
 
 ##### EVE-108: Implement registration page
 - **Created:** 2025-10-30
@@ -380,19 +391,7 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Description:** Create registration form with email/password validation and error handling
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-108
 
-##### EVE-107: Implement OAuth callback handler
-- **Created:** 2025-10-30
-- **Estimate:** 6 hours
-- **Description:** Extract JWT from query parameters, save to localStorage, update stores, handle errors, redirect to dashboard
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-107
-
-##### EVE-105: Create Next.js middleware for route protection
-- **Created:** 2025-10-30
-- **Estimate:** 4 hours
-- **Description:** Implement Next.js 15 middleware to protect routes from unauthenticated access
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-105
-
-#### UI Components (4 backlog)
+#### UI Components (3 backlog)
 
 ##### EVE-113: Create custom CharacterList component
 - **Created:** 2025-10-30
@@ -411,12 +410,6 @@ After analyzing the EVE Online player ecosystem, we've pivoted from mobile-first
 - **Estimate:** 4 hours
 - **Description:** Convert mobile theme.ts to CSS variables (colors, typography, spacing, effects)
 - **Link:** https://linear.app/eve-online-tool/issue/EVE-111
-
-##### EVE-110: Install and configure shadcn/ui
-- **Created:** 2025-10-30
-- **Estimate:** 3 hours
-- **Description:** Install shadcn/ui with EVE-themed colors and configure base components
-- **Link:** https://linear.app/eve-online-tool/issue/EVE-110
 
 #### Dashboard Features (5 backlog)
 
