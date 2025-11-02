@@ -3,50 +3,109 @@
 :root {
   /* EVE Online Theme Colors */
   --eve-background: #0a0e27;
+  --eve-surface: #141b3d;
+  --eve-surface-light: #1f2951;
   --eve-primary: #1e88e5;
   --eve-primary-hover: #1565c0;
   --eve-text-primary: #ffffff;
   --eve-text-secondary: #b0bec5;
   --eve-text-muted: #78909c;
+  --eve-border: #2a3f5f;
   --eve-warning: #ffa726;
   --eve-error: #f44336;
   --eve-success: #4caf50;
 
-  /* Default colors (for non-EVE pages) */
-  --background: #ffffff;
-  --foreground: #171717;
+  /* shadcn/ui Variables (mapped to EVE theme) */
+  --background: #0a0e27; /* EVE background */
+  --foreground: #ffffff; /* EVE text primary */
+
+  --card: #141b3d; /* EVE surface */
+  --card-foreground: #ffffff;
+
+  --popover: #141b3d;
+  --popover-foreground: #ffffff;
+
+  --primary: #1e88e5; /* EVE primary */
+  --primary-foreground: #ffffff;
+
+  --secondary: #1f2951; /* EVE surface light */
+  --secondary-foreground: #ffffff;
+
+  --muted: #1f2951;
+  --muted-foreground: #b0bec5; /* EVE text secondary */
+
+  --accent: #1f2951;
+  --accent-foreground: #ffffff;
+
+  --destructive: #f44336; /* EVE error */
+  --destructive-foreground: #ffffff;
+
+  --border: #2a3f5f; /* EVE border */
+  --input: #2a3f5f;
+  --ring: #1e88e5; /* EVE primary */
+
+  --radius: 0.5rem;
+
+  --chart-1: #1e88e5;
+  --chart-2: #4caf50;
+  --chart-3: #ffa726;
+  --chart-4: #f44336;
+  --chart-5: #9c27b0;
 }
 
 @theme inline {
   /* EVE Theme Colors */
   --color-eve-background: var(--eve-background);
+  --color-eve-surface: var(--eve-surface);
+  --color-eve-surface-light: var(--eve-surface-light);
   --color-eve-primary: var(--eve-primary);
   --color-eve-primary-hover: var(--eve-primary-hover);
   --color-eve-text-primary: var(--eve-text-primary);
   --color-eve-text-secondary: var(--eve-text-secondary);
   --color-eve-text-muted: var(--eve-text-muted);
+  --color-eve-border: var(--eve-border);
   --color-eve-warning: var(--eve-warning);
   --color-eve-error: var(--eve-error);
   --color-eve-success: var(--eve-success);
 
-  /* Default colors */
+  /* shadcn/ui Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* shadcn/ui base layer styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
