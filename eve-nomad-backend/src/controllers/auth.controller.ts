@@ -7,17 +7,20 @@ import crypto from 'crypto';
  */
 
 // Store state tokens temporarily (in production, use Redis)
-const stateStore = new Map<string, { timestamp: number; mobile?: boolean }>();
+const stateStore = new Map<string, { timestamp: number; mobile?: boolean; returnUrl?: string }>();
 
 // Clean up old state tokens every 10 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [state, data] of stateStore.entries()) {
-    if (now - data.timestamp > 10 * 60 * 1000) {
-      stateStore.delete(state);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [state, data] of stateStore.entries()) {
+      if (now - data.timestamp > 10 * 60 * 1000) {
+        stateStore.delete(state);
+      }
     }
-  }
-}, 10 * 60 * 1000);
+  },
+  10 * 60 * 1000,
+);
 
 /**
  * GET /auth/login
@@ -30,6 +33,7 @@ export async function loginHandler(
   request: FastifyRequest<{
     Querystring: {
       mobile?: string;
+      returnUrl?: string;
     };
   }>,
   reply: FastifyReply,
@@ -37,11 +41,13 @@ export async function loginHandler(
   // Generate random state for CSRF protection
   const state = crypto.randomBytes(32).toString('hex');
   const isMobile = request.query.mobile === 'true';
+  const returnUrl = request.query.returnUrl;
 
-  // Store state with mobile flag
+  // Store state with mobile flag and returnUrl
   stateStore.set(state, {
     timestamp: Date.now(),
     mobile: isMobile,
+    returnUrl: returnUrl || undefined,
   });
 
   // Required OAuth parameters
@@ -131,6 +137,7 @@ export async function callbackHandler(
   }
 
   const isMobile = stateData.mobile || false;
+  const returnUrl = stateData.returnUrl;
 
   // Remove used state token
   stateStore.delete(state);
@@ -192,6 +199,11 @@ export async function callbackHandler(
     callbackUrl.searchParams.set('characterId', character.characterId.toString());
     callbackUrl.searchParams.set('characterName', character.characterName);
     callbackUrl.searchParams.set('subscriptionTier', user.subscriptionTier);
+
+    // Pass returnUrl if it was provided in the original login request
+    if (returnUrl) {
+      callbackUrl.searchParams.set('returnUrl', returnUrl);
+    }
 
     return reply.redirect(callbackUrl.toString());
   } catch (error) {

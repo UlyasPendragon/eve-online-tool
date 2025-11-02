@@ -14,6 +14,7 @@ export default function LoginPage() {
   // Get query parameters (returnUrl, reason)
   const searchParams = useSearchParams();
   const reason = searchParams.get('reason');
+  const returnUrl = searchParams.get('returnUrl');
 
   // OAuth hook for authentication
   const { login, isLoading, error } = useOAuth();
@@ -27,7 +28,8 @@ export default function LoginPage() {
 
   // Handle login button click
   const handleLogin = () => {
-    login(); // Redirects to backend OAuth flow
+    // Pass returnUrl to OAuth flow so user is redirected back after login
+    login(returnUrl || undefined); // Redirects to backend OAuth flow
   };
 
   return (

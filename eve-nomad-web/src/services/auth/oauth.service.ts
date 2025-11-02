@@ -17,14 +17,22 @@ import { config } from '../../utils/config';
  * 4. Redirecting back to web app with JWT token
  *
  * The OAuth callback will be handled by the /auth/callback page route.
+ *
+ * @param returnUrl - Optional URL to redirect to after successful login
  */
-export function initiateOAuthLogin(): void {
+export function initiateOAuthLogin(returnUrl?: string): void {
   // Construct backend OAuth endpoint with web flow parameter
-  const authUrl = `${config.apiUrl}/auth/login?mobile=false`;
+  const url = new URL(`${config.apiUrl}/auth/login`);
+  url.searchParams.set('mobile', 'false');
+
+  // Add returnUrl if provided (will be passed back to callback handler)
+  if (returnUrl) {
+    url.searchParams.set('returnUrl', returnUrl);
+  }
 
   // Redirect to backend OAuth flow
   if (typeof window !== 'undefined') {
-    window.location.href = authUrl;
+    window.location.href = url.toString();
   }
 }
 
