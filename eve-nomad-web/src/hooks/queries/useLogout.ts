@@ -49,12 +49,12 @@ export const useLogout = (): UseLogoutResult => {
     onSuccess: () => {
       console.log('[useLogout] Logout successful, navigating to login');
       // Navigate to login screen
-      router.push('/login');
+      router.push('/auth/login');
     },
     onError: (error) => {
       console.error('[useLogout] Logout failed:', error);
       // Even if logout fails, navigate to login for security
-      router.push('/login');
+      router.push('/auth/login');
     },
   });
 

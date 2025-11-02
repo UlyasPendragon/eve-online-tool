@@ -46,6 +46,13 @@ export const logout = async (): Promise<void> => {
     clearStorage();
     console.log('[Logout Service] All storage cleared');
 
+    // Step 5: Clear HTTP cookie (for middleware authentication)
+    // Set cookie with max-age=0 to delete it immediately
+    if (typeof document !== 'undefined') {
+      document.cookie = 'jwt_token=; path=/; max-age=0; SameSite=Lax';
+      console.log('[Logout Service] HTTP cookie cleared');
+    }
+
     console.log('[Logout Service] Logout completed successfully');
   } catch (error) {
     console.error('[Logout Service] Error during logout:', error);
