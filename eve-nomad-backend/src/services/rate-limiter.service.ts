@@ -26,10 +26,7 @@ interface RateLimitState {
   resetAt: Date;
 }
 
-const ERROR_LIMIT_THRESHOLD = parseInt(
-  process.env['ESI_ERROR_LIMIT_THRESHOLD'] || '80',
-  10
-); // Stop at 80%
+const ERROR_LIMIT_THRESHOLD = parseInt(process.env['ESI_ERROR_LIMIT_THRESHOLD'] || '80', 10); // Stop at 80%
 
 /**
  * Track error limit from response headers
@@ -42,10 +39,7 @@ export function trackErrorLimit(headers: Record<string, string | string[]>): voi
     return;
   }
 
-  const errorsRemaining = parseInt(
-    Array.isArray(remain) ? remain[0] : remain!,
-    10,
-  );
+  const errorsRemaining = parseInt(Array.isArray(remain) ? remain[0] : remain!, 10);
   const resetSeconds = parseInt(Array.isArray(reset) ? reset[0] : reset!, 10);
 
   const state: ErrorLimitState = {
@@ -55,18 +49,14 @@ export function trackErrorLimit(headers: Record<string, string | string[]>): voi
 
   // Store in Redis if available
   if (redis.isConnected()) {
-    redis
-      .set('esi:error_limit', JSON.stringify(state), resetSeconds)
-      .catch(() => {
-        /* Ignore errors */
-      });
+    redis.set('esi:error_limit', JSON.stringify(state), resetSeconds).catch(() => {
+      /* Ignore errors */
+    });
   }
 
   // Warn if approaching limit
   if (errorsRemaining <= ERROR_LIMIT_THRESHOLD) {
-    console.warn(
-      `[RateLimit] Approaching error limit: ${errorsRemaining} errors remaining`,
-    );
+    console.warn(`[RateLimit] Approaching error limit: ${errorsRemaining} errors remaining`);
   }
 }
 
@@ -112,11 +102,9 @@ export function trackRateLimit(headers: Record<string, string | string[]>): void
 
   // Store in Redis if available
   if (redis.isConnected()) {
-    redis
-      .set(`esi:rate_limit:${groupStr}`, JSON.stringify(state), windowSeconds)
-      .catch(() => {
-        /* Ignore errors */
-      });
+    redis.set(`esi:rate_limit:${groupStr}`, JSON.stringify(state), windowSeconds).catch(() => {
+      /* Ignore errors */
+    });
   }
 
   // Warn if approaching limit (80% of tokens used)
@@ -150,9 +138,7 @@ export async function shouldThrottleErrors(): Promise<{
 
     // Check if limit is breached or approaching threshold
     if (state.errorsRemaining <= 0) {
-      const waitSeconds = Math.ceil(
-        (new Date(state.resetAt).getTime() - Date.now()) / 1000,
-      );
+      const waitSeconds = Math.ceil((new Date(state.resetAt).getTime() - Date.now()) / 1000);
       return {
         shouldWait: true,
         waitSeconds: Math.max(waitSeconds, 0),
@@ -179,9 +165,7 @@ export async function shouldThrottleErrors(): Promise<{
 /**
  * Check if we should throttle requests due to rate limit
  */
-export async function shouldThrottleRate(
-  routeGroup?: string,
-): Promise<{
+export async function shouldThrottleRate(routeGroup?: string): Promise<{
   shouldWait: boolean;
   waitSeconds: number;
   reason?: string;
@@ -200,9 +184,7 @@ export async function shouldThrottleRate(
 
     // Check if no tokens remaining
     if (state.tokensRemaining <= 0) {
-      const waitSeconds = Math.ceil(
-        (new Date(state.resetAt).getTime() - Date.now()) / 1000,
-      );
+      const waitSeconds = Math.ceil((new Date(state.resetAt).getTime() - Date.now()) / 1000);
       return {
         shouldWait: true,
         waitSeconds: Math.max(waitSeconds, 0),
@@ -225,9 +207,7 @@ export async function waitForReset(seconds: number, reason?: string): Promise<vo
     return;
   }
 
-  console.warn(
-    `[RateLimit] Waiting ${seconds}s due to: ${reason || 'rate limit'}`,
-  );
+  console.warn(`[RateLimit] Waiting ${seconds}s due to: ${reason || 'rate limit'}`);
 
   return new Promise((resolve) => {
     setTimeout(resolve, seconds * 1000);
@@ -237,9 +217,7 @@ export async function waitForReset(seconds: number, reason?: string): Promise<vo
 /**
  * Parse Retry-After header (from 429 response)
  */
-export function parseRetryAfter(
-  retryAfter: string | string[] | undefined,
-): number {
+export function parseRetryAfter(retryAfter: string | string[] | undefined): number {
   if (!retryAfter) {
     return 60; // Default 1 minute
   }

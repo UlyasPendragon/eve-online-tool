@@ -7,11 +7,11 @@
  * Job Priority Levels
  */
 export enum JobPriority {
-  CRITICAL = 1,  // Immediate execution (e.g., expired tokens)
-  HIGH = 2,      // Important but not urgent (e.g., user-requested data refresh)
-  NORMAL = 3,    // Standard operations (e.g., scheduled token refresh)
-  LOW = 4,       // Background maintenance (e.g., cache cleanup)
-  BATCH = 5,     // Large batch operations (e.g., historical data collection)
+  CRITICAL = 1, // Immediate execution (e.g., expired tokens)
+  HIGH = 2, // Important but not urgent (e.g., user-requested data refresh)
+  NORMAL = 3, // Standard operations (e.g., scheduled token refresh)
+  LOW = 4, // Background maintenance (e.g., cache cleanup)
+  BATCH = 5, // Large batch operations (e.g., historical data collection)
 }
 
 /**
@@ -81,7 +81,12 @@ export interface ESIDataRefreshJobData {
 export interface HistoricalDataCollectionJobData {
   characterId: number;
   userId: number;
-  dataType: 'wallet_journal' | 'wallet_transactions' | 'market_orders' | 'industry_jobs' | 'skill_history';
+  dataType:
+    | 'wallet_journal'
+    | 'wallet_transactions'
+    | 'market_orders'
+    | 'industry_jobs'
+    | 'skill_history';
   fromDate?: Date | string;
   toDate?: Date | string;
   batchSize?: number;

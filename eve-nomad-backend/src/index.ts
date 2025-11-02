@@ -195,16 +195,19 @@ async function start() {
     await initializeScheduledJobs();
 
     // Start periodic session cleanup (runs every hour)
-    setInterval(async () => {
-      try {
-        const cleaned = await jwtService.cleanupExpiredSessions();
-        if (cleaned > 0) {
-          logger.info(`Cleaned up ${cleaned} expired sessions`);
+    setInterval(
+      async () => {
+        try {
+          const cleaned = await jwtService.cleanupExpiredSessions();
+          if (cleaned > 0) {
+            logger.info(`Cleaned up ${cleaned} expired sessions`);
+          }
+        } catch (error) {
+          logger.error('Session cleanup failed', error as Error);
         }
-      } catch (error) {
-        logger.error('Session cleanup failed', error as Error);
-      }
-    }, 60 * 60 * 1000); // 1 hour
+      },
+      60 * 60 * 1000,
+    ); // 1 hour
 
     logger.info('EVE Nomad Backend API Server started', {
       port,

@@ -21,7 +21,7 @@ interface DecodedJWT extends JWTPayload {
  */
 export function generateToken(payload: JWTPayload): string {
   const secret = process.env['JWT_SECRET'];
-  const expiresIn = (process.env['JWT_EXPIRES_IN'] || '7d');
+  const expiresIn = process.env['JWT_EXPIRES_IN'] || '7d';
 
   if (!secret) {
     throw new Error('JWT_SECRET not configured');

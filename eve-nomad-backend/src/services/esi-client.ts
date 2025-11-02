@@ -17,8 +17,7 @@ export class ESIClient {
 
   constructor() {
     this.baseURL = process.env['ESI_BASE_URL'] || 'https://esi.evetech.net';
-    this.userAgent =
-      process.env['ESI_USER_AGENT'] || 'EVE Nomad (contact@evenomad.com)';
+    this.userAgent = process.env['ESI_USER_AGENT'] || 'EVE Nomad (contact@evenomad.com)';
 
     this.client = axios.create({
       baseURL: this.baseURL,
@@ -37,10 +36,7 @@ export class ESIClient {
     this.client.interceptors.request.use(async (config) => {
       const errorThrottle = await rateLimit.shouldThrottleErrors();
       if (errorThrottle.shouldWait) {
-        await rateLimit.waitForReset(
-          errorThrottle.waitSeconds,
-          errorThrottle.reason,
-        );
+        await rateLimit.waitForReset(errorThrottle.waitSeconds, errorThrottle.reason);
       }
 
       console.info(`[ESI] ${config.method?.toUpperCase()} ${config.url}`);
@@ -48,12 +44,8 @@ export class ESIClient {
     });
 
     this.client.interceptors.response.use((response) => {
-      rateLimit.trackErrorLimit(
-        response.headers as Record<string, string | string[]>,
-      );
-      rateLimit.trackRateLimit(
-        response.headers as Record<string, string | string[]>,
-      );
+      rateLimit.trackErrorLimit(response.headers as Record<string, string | string[]>);
+      rateLimit.trackRateLimit(response.headers as Record<string, string | string[]>);
 
       const errorLimit = response.headers['x-esi-error-limit-remain'];
       console.info(
@@ -85,15 +77,10 @@ export class ESIClient {
     let accessToken: string | undefined;
     if (options?.characterId) {
       try {
-        const result = await authService.getCharacterWithValidToken(
-          options.characterId,
-        );
+        const result = await authService.getCharacterWithValidToken(options.characterId);
         accessToken = result.accessToken;
       } catch (error) {
-        console.error(
-          `[ESI] Failed to get token for character ${options.characterId}:`,
-          error,
-        );
+        console.error(`[ESI] Failed to get token for character ${options.characterId}:`, error);
         throw new Error('REAUTH_REQUIRED');
       }
     }
@@ -127,17 +114,11 @@ export class ESIClient {
     return this.handleResponse<T>(response, cacheKey);
   }
 
-  private async handleResponse<T>(
-    response: AxiosResponse,
-    cacheKey: string,
-  ): Promise<T> {
+  private async handleResponse<T>(response: AxiosResponse, cacheKey: string): Promise<T> {
     const { status, data, headers } = response;
 
     if (status === 200) {
-      const expiresAt = cache.calculateExpiration(
-        headers['cache-control'],
-        headers['expires'],
-      );
+      const expiresAt = cache.calculateExpiration(headers['cache-control'], headers['expires']);
       const etag = headers['etag'];
 
       await cache.set(cacheKey, data, expiresAt, etag);
@@ -177,9 +158,7 @@ export class ESIClient {
     }
 
     if (status >= 400) {
-      throw new Error(
-        `ESI client error: ${status} - ${data?.error || 'Unknown'}`,
-      );
+      throw new Error(`ESI client error: ${status} - ${data?.error || 'Unknown'}`);
     }
 
     return data as T;
@@ -210,77 +189,57 @@ export class ESIClient {
   // ===== AUTHENTICATED ENDPOINTS (Require characterId) =====
 
   async getCharacterSkillQueue(characterId: number): Promise<ESI.SkillQueueItem[]> {
-    return this.get<ESI.SkillQueueItem[]>(
-      `/latest/characters/${characterId}/skillqueue/`,
-      { characterId },
-    );
+    return this.get<ESI.SkillQueueItem[]>(`/latest/characters/${characterId}/skillqueue/`, {
+      characterId,
+    });
   }
 
   async getCharacterSkills(characterId: number): Promise<ESI.CharacterSkills> {
-    return this.get<ESI.CharacterSkills>(
-      `/latest/characters/${characterId}/skills/`,
-      { characterId },
-    );
+    return this.get<ESI.CharacterSkills>(`/latest/characters/${characterId}/skills/`, {
+      characterId,
+    });
   }
 
   async getCharacterWallet(characterId: number): Promise<number> {
-    return this.get<number>(
-      `/latest/characters/${characterId}/wallet/`,
-      { characterId },
-    );
+    return this.get<number>(`/latest/characters/${characterId}/wallet/`, { characterId });
   }
 
   async getCharacterAssets(characterId: number): Promise<ESI.Asset[]> {
-    return this.get<ESI.Asset[]>(
-      `/latest/characters/${characterId}/assets/`,
-      { characterId },
-    );
+    return this.get<ESI.Asset[]>(`/latest/characters/${characterId}/assets/`, { characterId });
   }
 
   async getCharacterMail(characterId: number): Promise<ESI.MailHeader[]> {
-    return this.get<ESI.MailHeader[]>(
-      `/latest/characters/${characterId}/mail/`,
-      { characterId },
-    );
+    return this.get<ESI.MailHeader[]>(`/latest/characters/${characterId}/mail/`, { characterId });
   }
 
   async getCharacterMailBody(
     characterId: number,
     mailId: number,
   ): Promise<{ body: string; subject: string; from: number }> {
-    return this.get(
-      `/latest/characters/${characterId}/mail/${mailId}/`,
-      { characterId },
-    );
+    return this.get(`/latest/characters/${characterId}/mail/${mailId}/`, { characterId });
   }
 
   async getCharacterOrders(characterId: number): Promise<ESI.MarketOrder[]> {
-    return this.get<ESI.MarketOrder[]>(
-      `/latest/characters/${characterId}/orders/`,
-      { characterId },
-    );
+    return this.get<ESI.MarketOrder[]>(`/latest/characters/${characterId}/orders/`, {
+      characterId,
+    });
   }
 
   async getCharacterIndustryJobs(characterId: number): Promise<ESI.IndustryJob[]> {
-    return this.get<ESI.IndustryJob[]>(
-      `/latest/characters/${characterId}/industry/jobs/`,
-      { characterId },
-    );
+    return this.get<ESI.IndustryJob[]>(`/latest/characters/${characterId}/industry/jobs/`, {
+      characterId,
+    });
   }
 
   async getCharacterPlanets(characterId: number): Promise<ESI.PlanetaryColony[]> {
-    return this.get<ESI.PlanetaryColony[]>(
-      `/latest/characters/${characterId}/planets/`,
-      { characterId },
-    );
+    return this.get<ESI.PlanetaryColony[]>(`/latest/characters/${characterId}/planets/`, {
+      characterId,
+    });
   }
 
   // ===== CACHE MANAGEMENT =====
 
-  async invalidateCache(
-    endpoint: string,
-    params?: Record<string, unknown>,
-  ): Promise<void> {
+  async invalidateCache(endpoint: string, params?: Record<string, unknown>): Promise<void> {
     const cacheKey = cache.generateCacheKey(endpoint, params);
     await cache.del(cacheKey);
   }

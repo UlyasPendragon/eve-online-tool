@@ -2,11 +2,7 @@ import { User, Character } from '@prisma/client';
 import * as tokenService from './token.service';
 import { getPrisma } from '../utils/prisma';
 import { createLogger } from './logger.service';
-import {
-  RecordNotFoundError,
-  ReauthRequiredError,
-  AuthorizationError,
-} from '../types/errors';
+import { RecordNotFoundError, ReauthRequiredError, AuthorizationError } from '../types/errors';
 
 const prisma = getPrisma();
 const logger = createLogger({ service: 'AuthService' });
@@ -100,7 +96,10 @@ export async function createOrUpdateCharacter(
     },
   });
 
-  logger.info('Upserted character', { characterId, operation: character.createdAt === character.updatedAt ? 'created' : 'updated' });
+  logger.info('Upserted character', {
+    characterId,
+    operation: character.createdAt === character.updatedAt ? 'created' : 'updated',
+  });
   return character;
 }
 

@@ -26,10 +26,7 @@ const DEFAULT_OPTIONS: Required<RetryOptions> = {
 /**
  * Check if an error is retryable
  */
-export function isRetryableError(
-  error: unknown,
-  retryableStatusCodes: number[],
-): boolean {
+export function isRetryableError(error: unknown, retryableStatusCodes: number[]): boolean {
   // Network errors are always retryable
   if (error instanceof Error) {
     if (
@@ -77,10 +74,7 @@ export function sleep(ms: number): Promise<void> {
 /**
  * Retry a function with exponential backoff
  */
-export async function retry<T>(
-  fn: () => Promise<T>,
-  options: RetryOptions = {},
-): Promise<T> {
+export async function retry<T>(fn: () => Promise<T>, options: RetryOptions = {}): Promise<T> {
   const opts = { ...DEFAULT_OPTIONS, ...options };
   let lastError: Error;
 

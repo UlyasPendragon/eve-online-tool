@@ -64,11 +64,7 @@ export function getRedisClient(): Redis {
 /**
  * Set a key with optional TTL (in seconds)
  */
-export async function set(
-  key: string,
-  value: string,
-  ttlSeconds?: number,
-): Promise<void> {
+export async function set(key: string, value: string, ttlSeconds?: number): Promise<void> {
   const client = getRedisClient();
 
   try {

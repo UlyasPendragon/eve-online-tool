@@ -18,10 +18,7 @@ declare module 'fastify' {
  * JWT Authentication Middleware
  * Protects routes by verifying JWT token and loading user
  */
-export async function authMiddleware(
-  request: FastifyRequest,
-  reply: FastifyReply,
-): Promise<void> {
+export async function authMiddleware(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   try {
     // Extract JWT from Authorization header
     const authHeader = request.headers.authorization;
@@ -159,7 +156,8 @@ export function requireSubscription(requiredTier: 'free' | 'premium') {
     }
 
     const tierPriority = { free: 0, premium: 1 };
-    const userTierPriority = tierPriority[request.user.subscriptionTier as keyof typeof tierPriority] ?? 0;
+    const userTierPriority =
+      tierPriority[request.user.subscriptionTier as keyof typeof tierPriority] ?? 0;
     const requiredTierPriority = tierPriority[requiredTier];
 
     if (userTierPriority < requiredTierPriority) {

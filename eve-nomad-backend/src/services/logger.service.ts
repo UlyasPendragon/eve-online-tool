@@ -189,12 +189,7 @@ export class Logger {
   /**
    * Log ESI API call
    */
-  esi(
-    endpoint: string,
-    status: number,
-    durationMs: number,
-    data?: Record<string, unknown>,
-  ): void {
+  esi(endpoint: string, status: number, durationMs: number, data?: Record<string, unknown>): void {
     const logData = {
       ...this.context,
       ...data,
@@ -259,7 +254,11 @@ export class Logger {
   /**
    * Log cache operation
    */
-  cache(operation: 'hit' | 'miss' | 'set' | 'delete', key: string, data?: Record<string, unknown>): void {
+  cache(
+    operation: 'hit' | 'miss' | 'set' | 'delete',
+    key: string,
+    data?: Record<string, unknown>,
+  ): void {
     const logData = {
       ...this.context,
       ...data,

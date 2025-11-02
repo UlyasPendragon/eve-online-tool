@@ -25,15 +25,7 @@ async function processHistoricalDataCollection(
   job: Job<HistoricalDataCollectionJobData>,
 ): Promise<HistoricalDataCollectionJobResult> {
   const startTime = Date.now();
-  const {
-    characterId,
-    _userId,
-    dataType,
-    fromDate,
-    toDate,
-    batchSize = 100,
-    pageToken,
-  } = job.data;
+  const { characterId, _userId, dataType, fromDate, toDate, batchSize = 100, pageToken } = job.data;
 
   logger.info('Processing historical data collection', {
     characterId,
@@ -54,7 +46,7 @@ async function processHistoricalDataCollection(
       case 'wallet_journal':
         ({ recordsCollected, recordsStored } = await collectWalletJournal(
           characterId,
-    _userId,
+          _userId,
           fromDate,
           toDate,
           pageToken,
@@ -64,7 +56,7 @@ async function processHistoricalDataCollection(
       case 'wallet_transactions':
         ({ recordsCollected, recordsStored } = await collectWalletTransactions(
           characterId,
-    _userId,
+          _userId,
           fromDate,
           toDate,
           pageToken,
@@ -74,7 +66,7 @@ async function processHistoricalDataCollection(
       case 'market_orders':
         ({ recordsCollected, recordsStored } = await collectMarketOrdersHistory(
           characterId,
-    _userId,
+          _userId,
           fromDate,
           toDate,
         ));
@@ -83,7 +75,7 @@ async function processHistoricalDataCollection(
       case 'industry_jobs':
         ({ recordsCollected, recordsStored } = await collectIndustryJobsHistory(
           characterId,
-    _userId,
+          _userId,
           fromDate,
           toDate,
         ));
@@ -121,7 +113,7 @@ async function processHistoricalDataCollection(
 
     logger.error('Historical data collection failed', error as Error, {
       characterId,
-    _userId,
+      _userId,
       dataType,
       recordsCollected,
       recordsStored,
@@ -130,7 +122,7 @@ async function processHistoricalDataCollection(
     });
 
     captureException(error as Error, {
-    _userId,
+      _userId,
       characterId,
       tags: {
         error_type: 'historical_data_collection_failed',
@@ -356,7 +348,7 @@ export async function collectHistoricalData(
     JobType.HISTORICAL_DATA_COLLECTION,
     {
       characterId,
-    _userId,
+      _userId,
       dataType,
       fromDate: options?.fromDate,
       toDate: options?.toDate,

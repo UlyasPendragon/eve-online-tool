@@ -24,8 +24,7 @@ export async function getAllQueueMetrics(): Promise<QueueMetrics[]> {
       const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
 
       // Calculate rates
-      const completionRate =
-        total > 0 ? ((counts.completed / total) * 100).toFixed(2) : undefined;
+      const completionRate = total > 0 ? ((counts.completed / total) * 100).toFixed(2) : undefined;
       const failureRate = total > 0 ? ((counts.failed / total) * 100).toFixed(2) : undefined;
 
       metrics.push({
@@ -131,7 +130,9 @@ export async function getJobMetricsByType(jobType: JobType): Promise<JobMetrics 
     }
 
     const avgDuration =
-      durations.length > 0 ? durations.reduce((sum, d) => sum + d, 0) / durations.length : undefined;
+      durations.length > 0
+        ? durations.reduce((sum, d) => sum + d, 0) / durations.length
+        : undefined;
     const minDuration = durations.length > 0 ? Math.min(...durations) : undefined;
     const maxDuration = durations.length > 0 ? Math.max(...durations) : undefined;
     const failureRate = totalCount > 0 ? (failedCount / totalCount) * 100 : undefined;
