@@ -10,7 +10,7 @@ import { initiateOAuthLogin } from '../../services/auth/oauth.service';
 
 export interface UseOAuthResult {
   /** Initiate OAuth login flow (redirects to backend) */
-  login: () => void;
+  login: (returnUrl?: string) => void;
   /** Whether OAuth flow is initiating */
   isLoading: boolean;
   /** Error message if redirect failed */
@@ -57,13 +57,13 @@ export function useOAuth(): UseOAuthResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const login = useCallback(() => {
+  const login = useCallback((returnUrl?: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
       // Initiate OAuth flow (redirects to backend)
-      initiateOAuthLogin();
+      initiateOAuthLogin(returnUrl);
       // Note: This function redirects the browser, so code after this won't execute
     } catch (err) {
       // Catch any errors before redirect
