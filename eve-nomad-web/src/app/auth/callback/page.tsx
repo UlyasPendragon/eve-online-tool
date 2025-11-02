@@ -44,6 +44,11 @@ export default function CallbackPage() {
         // Store token in localStorage
         localStorage.setItem(config.storageKeys.jwtToken, token);
 
+        // Set HTTP cookie for middleware authentication
+        // Cookie expires in 7 days (same as JWT expiry)
+        const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
+        document.cookie = `jwt_token=${token}; path=/; max-age=${maxAge}; SameSite=Lax; Secure=${window.location.protocol === 'https:'}`;
+
         // Store user ID from query params
         const userId = searchParams.get('userId');
         if (userId) {
